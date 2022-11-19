@@ -1,0 +1,28 @@
+spring:
+  # web
+  web:
+    resources:
+      static-locations: classpath:/resources/,classpath:/upload/,classpath:/mapper/
+      chain:
+        cache: false
+        enabled: true
+      cache:
+        period: 2592000
+  # servlet
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 5MB
+  # devtools
+  devtools:
+    restart:
+      enabled: true
+  # jackson
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+    serialization:
+      # Date返回前端转时间戳 但不能解决LocalDateTime转时间戳（JacksonCustomizerConfig类解决）
+      write-dates-as-timestamps: true
