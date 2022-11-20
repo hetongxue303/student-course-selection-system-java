@@ -45,11 +45,16 @@ public class CaptchaController {
 
     @GetMapping("/captchaImage")
     public Result getVerify() {
-        // 在java11中使用Nashorn engine  会出现 Warning: Nashorn engine is planned to be removed from a future JDK release
-        System.setProperty("nashorn.args", "--no-deprecation-warning");
-        ArithmeticCaptcha captcha = new ArithmeticCaptcha(WIDTH, HEIGHT, LENGTH);
-        // 设置60秒过期
-        redisUtils.setValue(Base.SECURITY_CAPTCHA, captcha.text(), TIME, TIMEUNIT);
-        return Result.Success(captcha.toBase64()).setMessage(captcha.text());
+        try {
+            // 在java11中使用Nashorn engine  会出现 Warning: Nashorn engine is planned to be removed from a future JDK release
+            System.setProperty("nashorn.args", "--no-deprecation-warning");
+            ArithmeticCaptcha captcha = new ArithmeticCaptcha(WIDTH, HEIGHT, LENGTH);
+            // 设置60秒过期
+            redisUtils.setValue(Base.SECURITY_CAPTCHA, captcha.text(), TIME, TIMEUNIT);
+            return Result.Success(captcha.toBase64()).setMessage("获取验证码成功");
+        } catch (Exception e) {
+            return Result.Error().setMessage("获取验证码失败");
+        }
+
     }
 }

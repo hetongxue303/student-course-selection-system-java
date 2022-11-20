@@ -28,6 +28,10 @@ public class UserVo implements Serializable {
      */
     private String avatar;
     /**
+     * 角色信息
+     */
+    private String[] roles;
+    /**
      * 是否管理员
      */
     private boolean isAdmin;

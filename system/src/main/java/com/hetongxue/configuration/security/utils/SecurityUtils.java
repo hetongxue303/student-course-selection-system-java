@@ -115,13 +115,13 @@ public class SecurityUtils {
     }
 
     /**
-     * 生成权限key值
+     * 生成权限数组
      *
      * @param menus 菜单列表
-     * @return java.lang.String - 权限列表
+     * @return java.lang.String[]
      */
-    public static String generateAuthorityByKey(List<Menu> menus) {
-        return Optional.ofNullable(menus).orElse(new ArrayList<Menu>()).stream().filter(Objects::nonNull).map(Menu::getPerKey).filter(Objects::nonNull).collect(Collectors.joining(","));
+    public static String[] generatePermissionToArray(List<Menu> menus) {
+        return Optional.ofNullable(menus).orElse(new ArrayList<Menu>()).stream().filter(Objects::nonNull).map(Menu::getPerKey).filter(Objects::nonNull).toArray(String[]::new);
     }
 
     /**
@@ -140,6 +140,16 @@ public class SecurityUtils {
      */
     public static Account getAccount() {
         return (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    /**
+     * 生成角色数组
+     *
+     * @param roles 角色列表
+     * @return java.lang.String[]
+     */
+    public static String[] generateRoleToArray(List<Role> roles) {
+        return Optional.ofNullable(roles).orElse(new ArrayList<Role>()).stream().filter(Objects::nonNull).map(Role::getRoleKey).filter(Objects::nonNull).toArray(String[]::new);
     }
 
 }
