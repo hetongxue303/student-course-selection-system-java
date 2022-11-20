@@ -6,3 +6,7 @@ spring:
   config:
     import:
       - application-web.yml
+      - application-log.yml
+      - application-datasource.yml
+      - application-mybatisPlus.yml
+      - application-redis.yml

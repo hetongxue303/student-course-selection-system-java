@@ -1,16 +1,10 @@
-datasource:
-  type: mysql
-  host: 127.0.0.1
-  port: 3306
-  name: vue_class
-  otherSet: useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&useSSL=false
 spring:
   datasource:
     druid:
       # mysql
       username: root
       password: 123456
-      url: jdbc:${datasource.type}://${datasource.host}:${datasource.port}/${datasource.name}?${datasource.otherSet}
+      url: jdbc:mysql://127.0.0.1:3306/student-selection-course?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&useSSL=false
       driver-class-name: com.mysql.cj.jdbc.Driver
       # druid
       initial-size: 5
