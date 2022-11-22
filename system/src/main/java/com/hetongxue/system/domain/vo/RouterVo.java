@@ -49,17 +49,17 @@ public class RouterVo implements Serializable {
          */
         private String icon;
         /**
+         * 是否显示
+         */
+        private Boolean show;
+        /**
          * 是否缓存
          */
-        private Boolean keepAlive;
-        /**
-         * 是否需要权限
-         */
-        private Boolean requireAuth;
+        private Boolean cache;
         /**
          * 权限信息
          */
-        private String[] roles;
+        private String[] permission;
 
     }
 

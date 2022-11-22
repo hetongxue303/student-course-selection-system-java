@@ -55,11 +55,16 @@ public class SecurityUtils {
                 .orElse(new ArrayList<Menu>())
                 // 转换流
                 .stream()
-                // 过滤 不为空 和 对应父ID 的数据 以及类型不为 按钮 的
-                .filter(item -> item != null && Objects.equals(item.getParentId(), parentId) && item.getMenuType() != BUTTON_KEY)
+                // 过滤:不为空 类型不是按钮 等于父ID
+                .filter(item -> item != null && item.getMenuType() != BUTTON_KEY && Objects.equals(item.getParentId(), parentId))
                 // 循环遍历
                 .forEach(item -> {
-                    menus.add(new MenuVo().setName(item.getMenuTitle()).setPath(item.getPath()).setIcon(item.getIcon()).setChildren(generateMenu(menuList, item.getMenuId())));
+                    // 如果你的菜单标题为空 则只需要拿它对应的子菜单
+                    if (Objects.isNull(item.getMenuTitle())) {
+                        generateMenu(menuList, item.getMenuId()).stream().filter(Objects::nonNull).forEach(menus::add);
+                    } else {
+                        menus.add(new MenuVo().setName(item.getMenuTitle()).setPath(item.getPath()).setIcon(item.getIcon()).setChildren(generateMenu(menuList, item.getMenuId())));
+                    }
                 });
         return menus;
     }
@@ -83,9 +88,9 @@ public class SecurityUtils {
                 .filter(item -> item != null && Objects.equals(item.getParentId(), parentId) && item.getMenuType() != BUTTON_KEY)
                 // 遍历循环
                 .forEach(item -> {
-                    routers.add(new RouterVo().setName(item.getMenuName()).setPath(item.getPath()).setComponent(item.getComponent()).setMeta(new RouterVo.MetaVo().setTitle(item.getMenuTitle()).setIcon(item.getIcon()).setKeepAlive(true).setRequireAuth(true)
+                    routers.add(new RouterVo().setName(item.getMenuName()).setPath(item.getPath()).setComponent(item.getComponent()).setMeta(new RouterVo.MetaVo().setTitle(item.getMenuTitle()).setIcon(item.getIcon()).setCache(item.isCache()).setShow(item.isDisplay())
                             // 当类型是目录时 不存在权限代码
-                            .setRoles(item.getMenuType() != LIST_KEY ? menuList.stream()
+                            .setPermission(item.getMenuType() != LIST_KEY ? menuList.stream()
                                     // 过滤权限代码 不为空 且 不能是目录
                                     .filter(strip -> strip.getPerKey() != null)
                                     // 过滤父ID等于当前ID的数据(此时不存在list权限 若要存在list权限 则过滤排序顺序一致的数据即可)
@@ -152,4 +157,13 @@ public class SecurityUtils {
         return Optional.ofNullable(roles).orElse(new ArrayList<Role>()).stream().filter(Objects::nonNull).map(Role::getRoleKey).filter(Objects::nonNull).toArray(String[]::new);
     }
 
+    /**
+     * 去除空title菜单
+     *
+     * @param menus 菜单列表
+     * @return java.util.List<com.hetongxue.system.domain.Menu>
+     */
+    public static List<Menu> removeNullTitle(List<Menu> menus) {
+        return Optional.ofNullable(menus).orElse(new ArrayList<Menu>()).stream().filter(item -> item.getMenuTitle() != null).collect(Collectors.toList());
+    }
 }

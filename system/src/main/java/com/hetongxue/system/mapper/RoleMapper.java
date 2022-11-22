@@ -9,5 +9,4 @@ import com.hetongxue.system.domain.Role;
  * @author 何同学
  */
 public interface RoleMapper extends BaseMapper<Role> {
-
 }

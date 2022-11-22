@@ -51,50 +51,42 @@ public class Menu implements Serializable {
      */
     private String component;
     /**
-     * 排序
+     * 菜单排序
      */
     private Integer sort;
     /**
-     * 图标
+     * 图标名称
      */
     private String icon;
-    /**
-     * 菜单状态(0:显示 1:隐藏)
-     */
-    private boolean visible;
-    /**
-     * 是否外链(0:是 1:否)
-     */
-    private boolean isFrame;
-    /**
-     * 是否缓存(0:是 1:否)
-     */
-    private boolean isCache;
     /**
      * 权限标识
      */
     private String perKey;
     /**
-     * 是否删除(1是 0否)
+     * 是否显示(0:否 1:是)
      */
-    private boolean delFlag;
+    private boolean isDisplay;
+    /**
+     * 是否外链(0:否 1:是)
+     */
+    private boolean isFrame;
+    /**
+     * 是否缓存(0:否 1:是)
+     */
+    private boolean isCache;
+    /**
+     * 是否删除(0:否 1:是)
+     */
+    private boolean isDel;
     /**
      * 备注
      */
     private String remark;
     /**
-     * 创建人
-     */
-    private String createBy;
-    /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
-    /**
-     * 更新人
-     */
-    private String updateBy;
     /**
      * 更新时间
      */

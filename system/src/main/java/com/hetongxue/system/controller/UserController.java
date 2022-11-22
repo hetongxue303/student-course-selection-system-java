@@ -16,6 +16,7 @@ import com.hetongxue.system.service.MenuService;
 import com.hetongxue.system.service.RoleService;
 import com.hetongxue.system.service.UserService;
 import com.hetongxue.utils.JwtUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +36,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
 
     @Resource
@@ -59,13 +61,16 @@ public class UserController {
             List<Role> roleList = roleService.selectRoleByAccountId(accountId);
             // 获取菜单列表
             List<Menu> menuList = menuService.selectMenuListByAccountID(accountId);
+
+            // 生成菜单列表
             List<MenuVo> menus = SecurityUtils.generateMenu(menuList, 0L);
-            // 获取路由列表
+            // 生成路由列表
             List<RouterVo> routers = SecurityUtils.generateRouter(menuList, 0L);
             // 生成权限数组
             String[] permissions = SecurityUtils.generatePermissionToArray(menuList);
             // 生成角色数组
             String[] roles = SecurityUtils.generateRoleToArray(roleList);
+
             // 设置响应状态
             response.setStatus(HttpStatus.OK.value());
             // 返回UserVo值

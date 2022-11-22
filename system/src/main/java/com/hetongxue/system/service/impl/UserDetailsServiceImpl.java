@@ -5,8 +5,6 @@ import com.hetongxue.configuration.security.utils.SecurityUtils;
 import com.hetongxue.system.domain.Account;
 import com.hetongxue.system.domain.Menu;
 import com.hetongxue.system.domain.Role;
-import com.hetongxue.system.domain.vo.MenuVo;
-import com.hetongxue.system.domain.vo.RouterVo;
 import com.hetongxue.system.service.AccountService;
 import com.hetongxue.system.service.MenuService;
 import com.hetongxue.system.service.RoleService;
@@ -48,16 +46,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<Menu> menuList = menuService.selectMenuListByAccountID(account.getAccountId());
         // 生成权限列表
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(SecurityUtils.generateAuthority(roleList, menuList));
-        // 生成菜单列表
-        List<MenuVo> menus = SecurityUtils.generateMenu(menuList, 0L);
-        // 生成路由列表
-        List<RouterVo> routers = SecurityUtils.generateRouter(menuList, 0L);
-
-        System.out.println("routers = " + routers);
-        System.out.println("menuList = " + menuList);
-        System.out.println("authorities = " + authorities);
-        System.out.println("menus = " + menus);
-        System.out.println("routers = " + routers);
 
         return new LoginInfo(account, authorities);
     }

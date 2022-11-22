@@ -4,6 +4,7 @@ import com.hetongxue.base.constant.Base;
 import com.hetongxue.base.response.Result;
 import com.hetongxue.configuration.redis.RedisUtils;
 import com.wf.captcha.ArithmeticCaptcha;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,6 +53,8 @@ public class CaptchaController {
             // 设置60秒过期
             redisUtils.setValue(Base.SECURITY_CAPTCHA, captcha.text(), TIME, TIMEUNIT);
             return Result.Success(captcha.toBase64()).setMessage("获取验证码成功");
+        } catch (RedisConnectionFailureException e) {
+            return Result.Error().setMessage("redis连接失败");
         } catch (Exception e) {
             return Result.Error().setMessage("获取验证码失败");
         }

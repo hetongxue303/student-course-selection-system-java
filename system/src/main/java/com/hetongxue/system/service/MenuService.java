@@ -13,7 +13,7 @@ import java.util.List;
 public interface MenuService extends IService<Menu> {
 
     /**
-     * 根据用户ID获取权限列表
+     * 根据账户ID获取权限列表
      */
     List<Menu> selectMenuListByAccountID(Long accountID);
 

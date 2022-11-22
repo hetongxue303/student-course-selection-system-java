@@ -9,5 +9,4 @@ import com.hetongxue.system.domain.Menu;
  * @author 何同学
  */
 public interface MenuMapper extends BaseMapper<Menu> {
-
 }

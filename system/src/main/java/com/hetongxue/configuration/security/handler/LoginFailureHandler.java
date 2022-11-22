@@ -3,6 +3,7 @@ package com.hetongxue.configuration.security.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hetongxue.base.response.Result;
 import com.hetongxue.configuration.security.exception.CaptchaAuthenticationException;
+import com.hetongxue.configuration.security.exception.JwtAuthenticationException;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,7 +44,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         if (exception instanceof InternalAuthenticationServiceException) {
             message = "身份验证异常";
         }
-        if (exception instanceof AuthenticationServiceException || exception instanceof UsernameNotFoundException || exception instanceof CaptchaAuthenticationException) {
+        if (exception instanceof JwtAuthenticationException || exception instanceof AuthenticationServiceException || exception instanceof UsernameNotFoundException || exception instanceof CaptchaAuthenticationException) {
             message = exception.getMessage();
         }
         response.setContentType("application/json;charset=utf-8");

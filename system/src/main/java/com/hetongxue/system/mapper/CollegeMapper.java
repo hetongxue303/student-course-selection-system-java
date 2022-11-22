@@ -9,5 +9,4 @@ import com.hetongxue.system.domain.College;
  * @author 何同学
  */
 public interface CollegeMapper extends BaseMapper<College> {
-
 }

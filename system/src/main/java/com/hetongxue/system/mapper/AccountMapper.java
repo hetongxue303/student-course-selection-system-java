@@ -9,5 +9,4 @@ import com.hetongxue.system.domain.Account;
  * @author 何同学
  */
 public interface AccountMapper extends BaseMapper<Account> {
-
 }

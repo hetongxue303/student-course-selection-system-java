@@ -9,5 +9,4 @@ import com.hetongxue.system.domain.Major;
  * @author 何同学
  */
 public interface MajorMapper extends BaseMapper<Major> {
-
 }
