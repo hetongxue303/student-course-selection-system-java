@@ -53,7 +53,7 @@ public class UserController {
     @GetMapping("/getUserInfo")
     public Result getUserInfo(HttpServletResponse response) {
         // 获取账户信息
-        Long accountId =  SecurityUtils.getAccount().getAccountId();
+        Long accountId = SecurityUtils.getAccount().getAccountId();
         // 获取用户信息
         User user = userService.selectOneByAccountID(accountId);
         if (!ObjectUtils.isEmpty(user)) {
@@ -61,7 +61,6 @@ public class UserController {
             List<Role> roleList = roleService.selectRoleByAccountId(accountId);
             // 获取菜单列表
             List<Menu> menuList = menuService.selectMenuListByAccountID(accountId);
-
             // 生成菜单列表
             List<MenuVo> menus = SecurityUtils.generateMenu(menuList, 0L);
             // 生成路由列表
@@ -101,5 +100,5 @@ public class UserController {
             return Result.Error().setMessage("刷新token失败,请重新登录！");
         }
     }
-
+    
 }
