@@ -20,8 +20,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NullPointerException.class)
     public Result nullPointerException(NullPointerException e) {
-        e.printStackTrace();
         log.error(ResponseCode.NULL_POINTER.getMessage());
+        e.printStackTrace();
         return Result.Error().setMessage(ResponseCode.NULL_POINTER.getMessage()).setCode(ResponseCode.NULL_POINTER.getCode());
     }
 

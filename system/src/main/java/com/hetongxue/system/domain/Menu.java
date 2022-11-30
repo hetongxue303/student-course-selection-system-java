@@ -77,7 +77,7 @@ public class Menu implements Serializable {
     /**
      * 是否删除(0:否 1:是)
      */
-    private boolean isDel;
+    private boolean isDelete;
     /**
      * 备注
      */

@@ -25,32 +25,24 @@ public class College implements Serializable {
      * 学院ID
      */
     @TableId(type = IdType.AUTO)
-    private Long cId;
+    private Long collegeId;
     /**
      * 学院名称
      */
-    private String name;
+    private String collegeName;
     /**
      * 学院描述
      */
     private String remark;
     /**
-     * 删除状态
+     * 是否删除(1是 0否)
      */
-    private boolean delFlag;
-    /**
-     * 创建人
-     */
-    private String createBy;
+    private boolean isDelete;
     /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
-    /**
-     * 更新人
-     */
-    private String updateBy;
     /**
      * 更新时间
      */

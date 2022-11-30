@@ -39,22 +39,14 @@ public class Role implements Serializable {
      */
     private boolean status;
     /**
-     * 删除标志(0:存在 1:已删除)
+     * 是否删除(1是 0否)
      */
-    private boolean delFlag;
-    /**
-     * 创建人
-     */
-    private String createBy;
+    private boolean isDelete;
     /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
-    /**
-     * 更新人
-     */
-    private String updateBy;
     /**
      * 更新时间
      */

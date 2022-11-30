@@ -27,21 +27,21 @@ public class Account implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long accountId;
     /**
-     * 账户名
+     * 用户名
      */
     private String username;
     /**
-     * 账户密码
+     * 密码
      */
     private String password;
     /**
-     * 账户状态
+     * 账户状态(1启用 0禁用)
      */
     private boolean status;
     /**
-     * 删除状态
+     * 是否删除(1是 0否)
      */
-    private boolean delFlag;
+    private boolean isDelete;
     /**
      * 最后登录IP
      */

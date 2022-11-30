@@ -1,5 +1,6 @@
 package com.hetongxue.system.controller;
 
+import com.hetongxue.aop.annotation.LogAnnotation;
 import com.hetongxue.base.constant.Base;
 import com.hetongxue.base.response.Result;
 import com.hetongxue.configuration.redis.RedisUtils;
@@ -45,6 +46,7 @@ public class CaptchaController {
     private RedisUtils redisUtils;
 
     @GetMapping("/captchaImage")
+    @LogAnnotation(operate = "获取验证码", detail = "获取一个随机验证码")
     public Result getVerify() {
         try {
             // 在java11中使用Nashorn engine  会出现 Warning: Nashorn engine is planned to be removed from a future JDK release

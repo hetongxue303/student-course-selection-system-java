@@ -29,11 +29,11 @@ public class User implements Serializable {
     /**
      * 学院ID
      */
-    private Long cId;
+    private Long collegeId;
     /**
      * 专业ID
      */
-    private Long mId;
+    private Long majorId;
     /**
      * 角色ID
      */
@@ -71,9 +71,9 @@ public class User implements Serializable {
      */
     private boolean status;
     /**
-     * 删除标志(0:存在 1:已删除)
+     * 是否删除(1是 0否)
      */
-    private boolean delFlag;
+    private boolean isDelete;
     /**
      * 备注
      */

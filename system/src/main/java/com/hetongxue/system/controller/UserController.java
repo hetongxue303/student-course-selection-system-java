@@ -1,5 +1,6 @@
 package com.hetongxue.system.controller;
 
+import com.hetongxue.aop.annotation.LogAnnotation;
 import com.hetongxue.base.constant.Base;
 import com.hetongxue.base.response.Result;
 import com.hetongxue.configuration.redis.RedisUtils;
@@ -51,6 +52,7 @@ public class UserController {
     private RedisUtils redisUtils;
 
     @GetMapping("/getUserInfo")
+    @LogAnnotation(operate = "获取当前登录用户信息", detail = "获取当前已经登陆用户的路由、菜单及基本信息")
     public Result getUserInfo(HttpServletResponse response) {
         // 获取账户信息
         Long accountId = SecurityUtils.getAccount().getAccountId();
@@ -81,6 +83,7 @@ public class UserController {
 
 
     @PostMapping("/refreshToken")
+    @LogAnnotation(operate = "刷新令牌", detail = "前端过期时间刷新当前令牌")
     public Result refreshToken(HttpServletRequest request) {
         try {
             String token = request.getHeader(Base.SECURITY_AUTHORIZATION);
@@ -100,5 +103,5 @@ public class UserController {
             return Result.Error().setMessage("刷新token失败,请重新登录！");
         }
     }
-    
+
 }
