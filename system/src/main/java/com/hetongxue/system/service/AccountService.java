@@ -3,6 +3,8 @@ package com.hetongxue.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hetongxue.system.domain.Account;
 
+import java.util.List;
+
 /**
  * 账户业务
  *
@@ -17,5 +19,12 @@ public interface AccountService extends IService<Account> {
      * @return com.hetongxue.system.domain.Account
      */
     Account selectOneByUsername(String username);
+
+    /**
+     * 获取所有账户列表
+     *
+     * @return java.util.List<com.hetongxue.system.domain.Account>
+     */
+    List<Account> getAccountAll();
 
 }

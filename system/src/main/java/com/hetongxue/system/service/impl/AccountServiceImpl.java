@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 账户业务实现
@@ -27,6 +28,12 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     @Transactional(propagation = Propagation.SUPPORTS)
     public Account selectOneByUsername(String username) {
         return accountMapper.selectOne(new LambdaQueryWrapper<Account>().eq(Account::getUsername, username));
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public List<Account> getAccountAll() {
+        return accountMapper.selectList(new LambdaQueryWrapper<Account>().orderByAsc(Account::getAccountId));
     }
 
 }

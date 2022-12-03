@@ -54,7 +54,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         response.setStatus(HttpStatus.OK.value());
         // 获取当前用户信息
         Account account = ((LoginInfo) authentication.getPrincipal()).getAccount();
-        System.out.println("account = " + account);
         // 生成token
         String token = jwtUtils.generateToken(account.getAccountId(), account.getUsername());
         // 将token存于redis中(默认3天)
