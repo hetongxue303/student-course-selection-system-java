@@ -1,5 +1,6 @@
 package com.hetongxue.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hetongxue.system.domain.Role;
@@ -30,4 +31,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         return roleMapper.selectList(new QueryWrapper<Role>().inSql("role_id", "select distinct role_id from sys_account_role where account_id = " + accountID));
     }
 
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public List<Role> getRoleAll() {
+        return roleMapper.selectList(new LambdaQueryWrapper<Role>().orderByAsc(Role::getRoleId));
+    }
+    
 }

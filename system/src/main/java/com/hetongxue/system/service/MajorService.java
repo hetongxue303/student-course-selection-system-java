@@ -13,7 +13,7 @@ import java.util.List;
 public interface MajorService extends IService<Major> {
 
     /**
-     * 获取所有专业列表
+     * 获取专业列表 - All
      *
      * @return java.util.List<com.hetongxue.system.domain.Major>
      */

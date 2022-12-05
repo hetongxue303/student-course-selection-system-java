@@ -22,7 +22,7 @@ public class MajorController {
     private MajorService majorService;
 
     @GetMapping("/getMajorAll")
-    @LogAnnotation(operate = "获取所有专业列表")
+    @LogAnnotation(operate = "获取专业列表All")
     public Result getMajorAll() {
         return Result.Success(majorService.getMajorAll()).setMessage("获取专业列表成功");
     }

@@ -13,7 +13,7 @@ import java.util.List;
 public interface CollegeService extends IService<College> {
 
     /**
-     * 获取所有学院列表
+     * 获取学院列表 - All
      *
      * @return java.util.List<com.hetongxue.system.domain.College>
      */

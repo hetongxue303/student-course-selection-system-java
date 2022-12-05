@@ -17,4 +17,10 @@ public interface RoleService extends IService<Role> {
      */
     List<Role> selectRoleByAccountId(Long accountID);
 
+    /**
+     * 获取角色列表All
+     *
+     * @return java.util.List<com.hetongxue.system.domain.Role>
+     */
+    List<Role> getRoleAll();
 }

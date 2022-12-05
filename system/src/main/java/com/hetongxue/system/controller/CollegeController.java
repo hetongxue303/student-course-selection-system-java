@@ -22,7 +22,7 @@ public class CollegeController {
     private CollegeService collegeService;
 
     @GetMapping("/getCollegeAll")
-    @LogAnnotation(operate = "获取所有学院列表")
+    @LogAnnotation(operate = "获取学院列表All")
     public Result getCollegeAll() {
         return Result.Success(collegeService.getCollegeAll()).setMessage("获取学院列表成功");
     }

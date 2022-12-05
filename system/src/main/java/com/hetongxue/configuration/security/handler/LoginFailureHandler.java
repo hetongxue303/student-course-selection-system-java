@@ -1,6 +1,7 @@
 package com.hetongxue.configuration.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hetongxue.base.enums.ResponseCode;
 import com.hetongxue.base.response.Result;
 import com.hetongxue.configuration.security.exception.CaptchaAuthenticationException;
 import com.hetongxue.configuration.security.exception.JwtAuthenticationException;
@@ -25,30 +26,34 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        String message = "登陆失败，未知异常！";
+        Result result = Result.Error().setMessage("登陆失败，未知异常！");
+        response.setContentType("application/json;charset=utf-8");
         if (exception instanceof AccountExpiredException) {
-            message = "账户过期";
+            result.setMessage("账户过期");
         }
         if (exception instanceof BadCredentialsException) {
-            message = "用户名或密码错误";
+            result.setMessage("用户名或密码错误");
         }
         if (exception instanceof CredentialsExpiredException) {
-            message = "凭据过期";
+            result.setMessage("凭据过期");
         }
         if (exception instanceof DisabledException) {
-            message = "账户禁用";
+            result.setMessage("账户不可用");
         }
         if (exception instanceof LockedException) {
-            message = "账户已锁";
+            result.setMessage("账户被锁");
         }
         if (exception instanceof InternalAuthenticationServiceException) {
-            message = "身份验证异常";
+            result.setMessage("身份验证异常");
         }
-        if (exception instanceof JwtAuthenticationException || exception instanceof AuthenticationServiceException || exception instanceof UsernameNotFoundException || exception instanceof CaptchaAuthenticationException) {
-            message = exception.getMessage();
+        if (exception instanceof JwtAuthenticationException) {
+            response.setStatus(ResponseCode.UNAUTHORIZED.getCode());
+            result.setMessage(exception.getMessage());
         }
-        response.setContentType("application/json;charset=utf-8");
-        response.getWriter().println(new ObjectMapper().writeValueAsString(Result.Error().setMessage(message)));
+        if (exception instanceof AuthenticationServiceException || exception instanceof UsernameNotFoundException || exception instanceof CaptchaAuthenticationException) {
+            result.setMessage(exception.getMessage());
+        }
+        response.getWriter().println(new ObjectMapper().writeValueAsString(result));
     }
 
 }

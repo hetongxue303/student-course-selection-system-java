@@ -21,7 +21,7 @@ public interface AccountService extends IService<Account> {
     Account selectOneByUsername(String username);
 
     /**
-     * 获取所有账户列表
+     * 获取账户列表 - All
      *
      * @return java.util.List<com.hetongxue.system.domain.Account>
      */
