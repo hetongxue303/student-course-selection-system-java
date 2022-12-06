@@ -34,7 +34,7 @@ public class UserVo implements Serializable {
     /**
      * 是否管理员
      */
-    private boolean isAdmin;
+    private Boolean isAdmin;
     /**
      * 权限列表
      */

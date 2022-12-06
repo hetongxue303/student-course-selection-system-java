@@ -1,10 +1,13 @@
 package com.hetongxue;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.hetongxue.system.domain.College;
 import com.hetongxue.system.mapper.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 测试类
@@ -29,12 +32,11 @@ public class TestApplication {
 
     @Test
     void test() {
-        System.out.println(accountMapper.selectList(null));
-        System.out.println(menuMapper.selectList(null));
-        System.out.println(collegeMapper.selectList(null));
-        System.out.println(majorMapper.selectList(null));
-        System.out.println(roleMapper.selectList(null));
-        System.out.println(userMapper.selectList(null));
+        List<College> list = collegeMapper.selectList(new LambdaQueryWrapper<College>().eq(College::getIsDelete, true));
+        list.forEach(item -> {
+            System.out.println(item.getIsDelete());
+        });
+
     }
 
 }

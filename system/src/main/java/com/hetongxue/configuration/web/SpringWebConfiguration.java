@@ -55,10 +55,12 @@ public class SpringWebConfiguration implements WebMvcConfigurer {
         registry.addMapping("/**")// 添加映射路径
                 .allowedHeaders("*")// 放行哪些原始请求头部信息
                 .exposedHeaders("*")// 暴露哪些头部信息
+//                .allowedOrigins("*")// 允许访问的源
                 .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE", "TRACE", "HEAD", "PATCH")// 放行哪些请求方式
                 .allowCredentials(true)// 是否发送 Cookie
                 .maxAge(3600L)// 最大时间
-                .exposedHeaders(Base.SECURITY_AUTHORIZATION).allowedOriginPatterns("*");
+                .exposedHeaders(Base.SECURITY_AUTHORIZATION)// 公开的请求头
+                .allowedOriginPatterns("*");
     }
 
 

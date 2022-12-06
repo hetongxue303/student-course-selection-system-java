@@ -37,11 +37,11 @@ public class Account implements Serializable {
     /**
      * 账户状态(1启用 0禁用)
      */
-    private boolean status;
+    private Boolean status;
     /**
      * 是否删除(1是 0否)
      */
-    private boolean isDelete;
+    private Boolean isDelete;
     /**
      * 最后登录IP
      */

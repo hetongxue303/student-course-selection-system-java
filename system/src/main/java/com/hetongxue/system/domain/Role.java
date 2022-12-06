@@ -37,11 +37,11 @@ public class Role implements Serializable {
     /**
      * 帐号状态(0:正常 1:停用)
      */
-    private boolean status;
+    private Boolean status;
     /**
      * 是否删除(1是 0否)
      */
-    private boolean isDelete;
+    private Boolean isDelete;
     /**
      * 创建时间
      */

@@ -65,19 +65,19 @@ public class Menu implements Serializable {
     /**
      * 是否显示(0:否 1:是)
      */
-    private boolean isDisplay;
+    private Boolean isDisplay;
     /**
      * 是否外链(0:否 1:是)
      */
-    private boolean isFrame;
+    private Boolean isFrame;
     /**
      * 是否缓存(0:否 1:是)
      */
-    private boolean isCache;
+    private Boolean isCache;
     /**
      * 是否删除(0:否 1:是)
      */
-    private boolean isDelete;
+    private Boolean isDelete;
     /**
      * 备注
      */

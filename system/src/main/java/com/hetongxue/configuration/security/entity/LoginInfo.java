@@ -56,7 +56,7 @@ public class LoginInfo implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return account.isStatus();
+        return account.getStatus();
     }
 
 }

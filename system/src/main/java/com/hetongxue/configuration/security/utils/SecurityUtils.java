@@ -82,7 +82,7 @@ public class SecurityUtils {
                 // 过滤 不为空 和 对应父ID 的数据 以及类型不为 按钮 的
                 .filter(item -> item != null && Objects.equals(item.getParentId(), parentId) && item.getMenuType() != BUTTON_KEY)
                 // 遍历循环
-                .forEach(item -> routers.add(new RouterVo().setName(item.getMenuName()).setPath(item.getPath()).setComponent(item.getComponent()).setMeta(new RouterVo.MetaVo().setTitle(item.getMenuTitle()).setIcon(item.getIcon()).setCache(item.isCache()).setShow(item.isDisplay())
+                .forEach(item -> routers.add(new RouterVo().setName(item.getMenuName()).setPath(item.getPath()).setComponent(item.getComponent()).setMeta(new RouterVo.MetaVo().setTitle(item.getMenuTitle()).setIcon(item.getIcon()).setCache(item.getIsCache()).setShow(item.getIsDisplay())
                         // 当类型是目录时 不存在权限代码
                         .setPermission(item.getMenuType() != LIST_KEY ? menuList.stream()
                                 // 过滤权限代码 不为空 且 不能是目录

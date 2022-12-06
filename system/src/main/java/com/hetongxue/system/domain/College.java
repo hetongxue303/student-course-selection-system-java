@@ -37,7 +37,7 @@ public class College implements Serializable {
     /**
      * 是否删除(1是 0否)
      */
-    private boolean isDelete;
+    private Boolean isDelete;
     /**
      * 创建时间
      */
