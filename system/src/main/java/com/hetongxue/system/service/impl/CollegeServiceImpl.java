@@ -37,12 +37,6 @@ public class CollegeServiceImpl extends ServiceImpl<CollegeMapper, College> impl
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean addCollege(College college) {
-        return collegeMapper.insert(college) > 0;
-    }
-
-    @Override
     @Transactional(propagation = Propagation.SUPPORTS)
     public QueryVo getCollegePage(Integer page, Integer size, String name) {
         LambdaQueryWrapper<College> wrapper = new LambdaQueryWrapper<>();
@@ -57,10 +51,19 @@ public class CollegeServiceImpl extends ServiceImpl<CollegeMapper, College> impl
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean delCollege(Long id) {
-        // 逻辑删除
-        return collegeMapper.updateById(new College().setCollegeId(id).setIsDelete(true)) > 0;
-        // 物理删除
-//        return collegeMapper.deleteById(id) > 0;
+    public int addCollege(College college) {
+        return collegeMapper.insert(college);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int delCollege(Long id) {
+        return collegeMapper.updateById(new College().setCollegeId(id).setIsDelete(true));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateCollege(College college) {
+        return collegeMapper.updateById(college);
     }
 }

@@ -14,22 +14,14 @@ import java.util.List;
 public interface CollegeService extends IService<College> {
 
     /**
-     * 获取学院列表 - All
+     * 获取所有学院列表
      *
-     * @return java.util.List<com.hetongxue.system.domain.College>
+     * @return List<College>
      */
     List<College> getCollegeAll();
 
     /**
-     * 添加学院
-     *
-     * @param college 学院信息
-     * @return boolean
-     */
-    boolean addCollege(College college);
-
-    /**
-     * 获取学院列表 - Page
+     * 分页获取学院列表
      *
      * @param page 当前页
      * @param size 页面大小
@@ -39,10 +31,27 @@ public interface CollegeService extends IService<College> {
     QueryVo getCollegePage(Integer page, Integer size, String name);
 
     /**
+     * 添加学院
+     *
+     * @param college 学院信息
+     * @return int
+     */
+    int addCollege(College college);
+
+    /**
      * 删除学院
      *
      * @param id 学院ID
-     * @return boolean
+     * @return int
      */
-    boolean delCollege(Long id);
+    int delCollege(Long id);
+
+    /**
+     * 更新学院
+     *
+     * @param college 学院信息
+     * @return int
+     */
+    int updateCollege(College college);
+
 }
