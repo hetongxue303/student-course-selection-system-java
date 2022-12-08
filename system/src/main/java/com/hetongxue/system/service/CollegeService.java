@@ -47,6 +47,14 @@ public interface CollegeService extends IService<College> {
     int delCollege(Long id);
 
     /**
+     * 批量删除学院
+     *
+     * @param ids 学院ID
+     * @return int
+     */
+    int delBatchCollege(List<Long> ids);
+
+    /**
      * 更新学院
      *
      * @param college 学院信息

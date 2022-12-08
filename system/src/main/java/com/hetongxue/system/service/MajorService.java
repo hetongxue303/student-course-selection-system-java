@@ -47,12 +47,19 @@ public interface MajorService extends IService<Major> {
     int delMajor(Long id);
 
     /**
+     * 批量删除专业
+     *
+     * @param ids 专业ID
+     * @return int
+     */
+    int delBatchMajor(List<Long> ids);
+
+    /**
      * 更新专业
      *
      * @param major 专业信息
      * @return int
      */
     int updateMajor(Major major);
-
 
 }

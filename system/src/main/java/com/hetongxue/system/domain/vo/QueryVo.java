@@ -21,22 +21,22 @@ public class QueryVo implements Serializable {
     /**
      * 当前页
      */
-    long page;
+    Long page;
 
     /**
      * 页面大小
      */
-    long size;
+    Long size;
 
     /**
      * 总条数
      */
-    long total;
+    Long total;
 
     /**
      * 总共页数
      */
-    long pages;
+    Long pages;
 
     /**
      * 数据记录

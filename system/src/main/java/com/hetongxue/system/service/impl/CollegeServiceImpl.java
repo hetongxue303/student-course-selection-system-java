@@ -63,6 +63,12 @@ public class CollegeServiceImpl extends ServiceImpl<CollegeMapper, College> impl
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public int delBatchCollege(List<Long> ids) {
+        return collegeMapper.deleteBatchIds(ids);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateCollege(College college) {
         return collegeMapper.updateById(college);
     }

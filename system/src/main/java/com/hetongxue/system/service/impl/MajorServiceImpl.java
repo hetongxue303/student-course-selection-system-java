@@ -65,6 +65,12 @@ public class MajorServiceImpl extends ServiceImpl<MajorMapper, Major> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public int delBatchMajor(List<Long> ids) {
+        return majorMapper.deleteBatchIds(ids);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateMajor(Major major) {
         return majorMapper.updateById(major);
 
