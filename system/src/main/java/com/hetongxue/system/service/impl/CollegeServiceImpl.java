@@ -38,14 +38,14 @@ public class CollegeServiceImpl extends ServiceImpl<CollegeMapper, College> impl
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public QueryVo getCollegePage(Integer page, Integer size, String name) {
+    public QueryVo getCollegePage(Integer currentPage, Integer pageSize, String name) {
         LambdaQueryWrapper<College> wrapper = new LambdaQueryWrapper<>();
         if (Objects.nonNull(name)) {
             wrapper.like(College::getCollegeName, name);
         }
         wrapper.eq(College::getIsDelete, false);
         wrapper.orderByAsc(College::getCollegeId);
-        Page<College> list = collegeMapper.selectPage(new Page<>(page, size), wrapper);
+        Page<College> list = collegeMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
         return new QueryVo(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), list.getRecords());
     }
 
@@ -64,7 +64,14 @@ public class CollegeServiceImpl extends ServiceImpl<CollegeMapper, College> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int delBatchCollege(List<Long> ids) {
-        return collegeMapper.deleteBatchIds(ids);
+        try {
+            ids.forEach(id -> {
+                collegeMapper.updateById(new College().setCollegeId(id).setIsDelete(true));
+            });
+            return 1;
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     @Override

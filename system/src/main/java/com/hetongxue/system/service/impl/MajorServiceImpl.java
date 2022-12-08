@@ -39,14 +39,14 @@ public class MajorServiceImpl extends ServiceImpl<MajorMapper, Major> implements
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public QueryVo getMajorPage(Integer page, Integer size, String name) {
+    public QueryVo getMajorPage(Integer currentPage, Integer pageSize, String name) {
         LambdaQueryWrapper<Major> wrapper = new LambdaQueryWrapper<>();
         if (Objects.nonNull(name)) {
             wrapper.like(Major::getMajorName, name);
         }
         wrapper.eq(Major::getIsDelete, false);
         wrapper.orderByAsc(Major::getMajorId);
-        Page<Major> list = majorMapper.selectPage(new Page<>(page, size), wrapper);
+        Page<Major> list = majorMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
         return new QueryVo(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), list.getRecords());
 
     }
@@ -66,7 +66,14 @@ public class MajorServiceImpl extends ServiceImpl<MajorMapper, Major> implements
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int delBatchMajor(List<Long> ids) {
-        return majorMapper.deleteBatchIds(ids);
+        try {
+            ids.forEach(id -> {
+                majorMapper.updateById(new Major().setMajorId(id).setIsDelete(true));
+            });
+            return 1;
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     @Override

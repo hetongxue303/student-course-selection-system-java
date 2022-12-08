@@ -23,12 +23,12 @@ public interface MajorService extends IService<Major> {
     /**
      * 分页获取专业列表
      *
-     * @param page 当前页
-     * @param size 页面大小
-     * @param name 专业名
+     * @param currentPage 当前页
+     * @param pageSize    页面大小
+     * @param name        专业名
      * @return QueryVo
      */
-    QueryVo getMajorPage(Integer page, Integer size, String name);
+    QueryVo getMajorPage(Integer currentPage, Integer pageSize, String name);
 
     /**
      * 添加专业
