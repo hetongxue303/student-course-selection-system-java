@@ -13,14 +13,11 @@ import java.util.List;
 public interface RoleService extends IService<Role> {
 
     /**
-     * 根据账户ID获取角色列表
-     */
-    List<Role> selectRoleByAccountId(Long accountID);
-
-    /**
-     * 获取角色列表All
+     * 按用户ID查询角色列表
      *
-     * @return java.util.List<com.hetongxue.system.domain.Role>
+     * @param userId 用户ID
+     * @return List<Role>
      */
-    List<Role> getRoleAll();
+    List<Role> selectRoleListByUserId(Long userId);
+
 }

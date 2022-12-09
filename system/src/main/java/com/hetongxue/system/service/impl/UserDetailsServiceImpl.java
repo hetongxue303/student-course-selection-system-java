@@ -2,12 +2,12 @@ package com.hetongxue.system.service.impl;
 
 import com.hetongxue.configuration.security.entity.LoginInfo;
 import com.hetongxue.configuration.security.utils.SecurityUtils;
-import com.hetongxue.system.domain.Account;
 import com.hetongxue.system.domain.Menu;
 import com.hetongxue.system.domain.Role;
-import com.hetongxue.system.service.AccountService;
+import com.hetongxue.system.domain.User;
 import com.hetongxue.system.service.MenuService;
 import com.hetongxue.system.service.RoleService;
+import com.hetongxue.system.service.UserService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +28,7 @@ import java.util.Objects;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Resource
-    private AccountService accountService;
+    private UserService userService;
     @Resource
     private RoleService roleService;
     @Resource
@@ -36,18 +36,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = accountService.selectOneByUsername(username);
-        if (Objects.isNull(account)) {
+        User user = userService.selectOneByUsername(username);
+        if (Objects.isNull(user)) {
             throw new UsernameNotFoundException("用户名或密码错误");
         }
+        
         // 查询角色列表
-        List<Role> roleList = roleService.selectRoleByAccountId(account.getAccountId());
+        List<Role> roleList = roleService.selectRoleListByUserId(user.getUserId());
         // 查询菜单列表
-        List<Menu> menuList = menuService.selectMenuListByAccountID(account.getAccountId());
+        List<Menu> menuList = menuService.selectMenuListByUserId(user.getUserId());
         // 生成权限列表
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(SecurityUtils.generateAuthority(roleList, menuList));
 
-        return new LoginInfo(account, authorities);
+        return new LoginInfo(user, authorities);
     }
 
 }

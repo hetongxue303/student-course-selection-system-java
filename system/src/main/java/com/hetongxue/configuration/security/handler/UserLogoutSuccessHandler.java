@@ -30,17 +30,12 @@ public class UserLogoutSuccessHandler implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        // 判断是否有权限信息 有的话删除
         if (!ObjectUtils.isEmpty(authentication)) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
-        // 设置响应头
         response.setContentType("application/json;charset=utf-8");
-        // 设置响应状态
         response.setStatus(HttpStatus.OK.value());
-        // 设置响应头token信息为空
         response.setHeader(Base.SECURITY_AUTHORIZATION, "");
-        // 清空redis中的token信息
         redisUtils.delete(Base.SECURITY_AUTHORIZATION);
         response.getWriter().println(new ObjectMapper().writeValueAsString(Result.Success().setMessage("注销成功")));
     }

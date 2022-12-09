@@ -54,15 +54,14 @@ public class UserController {
     @GetMapping("/getUserInfo")
     @LogAnnotation(operate = "获取当前登录用户信息", detail = "获取当前已经登陆用户的路由、菜单及基本信息")
     public Result getUserInfo(HttpServletResponse response) {
-        // 获取账户信息
-        Long accountId = SecurityUtils.getAccount().getAccountId();
         // 获取用户信息
-        User user = userService.selectOneByAccountID(accountId);
+        User user = userService.selectOneByUsername(SecurityUtils.getUser().getUsername());
         if (!ObjectUtils.isEmpty(user)) {
+
             // 获取角色列表
-            List<Role> roleList = roleService.selectRoleByAccountId(accountId);
+            List<Role> roleList = roleService.selectRoleListByUserId(user.getUserId());
             // 获取菜单列表
-            List<Menu> menuList = menuService.selectMenuListByAccountID(accountId);
+            List<Menu> menuList = menuService.selectMenuListByUserId(user.getUserId());
             // 生成菜单列表
             List<MenuVo> menus = SecurityUtils.generateMenu(menuList, 0L);
             // 生成路由列表
@@ -72,9 +71,7 @@ public class UserController {
             // 生成角色数组
             String[] roles = SecurityUtils.generateRoleToArray(roleList);
 
-            // 设置响应状态
             response.setStatus(HttpStatus.OK.value());
-            // 返回UserVo值
             return Result.Success(new UserVo(user.getNickName(), user.getAvatar(), roles, false, permissions, menus, routers)).setMessage("获取用户信息成功");
         }
         response.setStatus(HttpStatus.UNAUTHORIZED.value());

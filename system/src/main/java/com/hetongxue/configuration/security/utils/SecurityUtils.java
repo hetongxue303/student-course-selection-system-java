@@ -1,8 +1,8 @@
 package com.hetongxue.configuration.security.utils;
 
-import com.hetongxue.system.domain.Account;
 import com.hetongxue.system.domain.Menu;
 import com.hetongxue.system.domain.Role;
+import com.hetongxue.system.domain.User;
 import com.hetongxue.system.domain.vo.MenuVo;
 import com.hetongxue.system.domain.vo.RouterVo;
 import org.springframework.security.core.Authentication;
@@ -132,12 +132,12 @@ public class SecurityUtils {
     }
 
     /**
-     * 获取账户信息
+     * 获取用户信息
      *
-     * @return com.hetongxue.system.domain.Account
+     * @return com.hetongxue.system.domain.User
      */
-    public static Account getAccount() {
-        return (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public static User getUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     /**
@@ -159,4 +159,5 @@ public class SecurityUtils {
     public static List<Menu> removeNullTitle(List<Menu> menus) {
         return Optional.ofNullable(menus).orElse(new ArrayList<>()).stream().filter(item -> item.getMenuTitle() != null).collect(Collectors.toList());
     }
+    
 }

@@ -1,6 +1,6 @@
 package com.hetongxue.configuration.security.entity;
 
-import com.hetongxue.system.domain.Account;
+import com.hetongxue.system.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.Collection;
 @Accessors(chain = true)
 public class LoginInfo implements UserDetails {
 
-    private Account account;
+    private User user;
     private Collection<GrantedAuthority> authorities;
 
     @Override
@@ -31,12 +31,12 @@ public class LoginInfo implements UserDetails {
 
     @Override
     public String getPassword() {
-        return account.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return account.getUsername();
+        return user.getUsername();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class LoginInfo implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return account.getStatus();
+        return user.getIsEnable();
     }
 
 }

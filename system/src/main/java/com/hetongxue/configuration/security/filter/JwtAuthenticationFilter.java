@@ -4,8 +4,7 @@ import com.hetongxue.base.constant.Base;
 import com.hetongxue.configuration.redis.RedisUtils;
 import com.hetongxue.configuration.security.exception.JwtAuthenticationException;
 import com.hetongxue.configuration.security.utils.SecurityUtils;
-import com.hetongxue.system.domain.Account;
-import com.hetongxue.system.service.AccountService;
+import com.hetongxue.system.domain.User;
 import com.hetongxue.system.service.MenuService;
 import com.hetongxue.system.service.RoleService;
 import com.hetongxue.system.service.UserService;
@@ -46,8 +45,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private RoleService roleService;
     @Resource
     private MenuService menuService;
-    @Resource
-    private AccountService accountService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
@@ -58,27 +55,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         // 校验token是否存在
         if (ObjectUtils.isEmpty(jwtUtils.getClaims(token))) {
-            throw new JwtAuthenticationException("token异常");
+            throw new JwtAuthenticationException("凭证异常");
         }
         // 校验token是否过期
         String redisToken = String.valueOf(redisUtils.getValue(Base.SECURITY_AUTHORIZATION));
         if (Objects.isNull(redisToken) || jwtUtils.isExpired(token)) {
-            throw new JwtAuthenticationException("token过期");
+            throw new JwtAuthenticationException("凭证过期");
         }
         // 校验用户token与redis中的token是否一致
         if (!Objects.equals(token, redisToken)) {
-            throw new JwtAuthenticationException("token不一致");
+            throw new JwtAuthenticationException("凭证不一致");
         }
         // 验证合法性
-        Account account = accountService.selectOneByUsername(jwtUtils.getUsername(token));
-        if (!account.getAccountId().equals(jwtUtils.getUserId(token))) {
-            throw new JwtAuthenticationException("token不合法");
+        User user = userService.selectOneByUsername(jwtUtils.getUsername(token));
+        if (!user.getUserId().equals(jwtUtils.getUserId(token))) {
+            throw new JwtAuthenticationException("凭证不合法");
         }
         // 获取权限列表
-        String authority = SecurityUtils.generateAuthority(roleService.selectRoleByAccountId(account.getAccountId()), menuService.selectMenuListByAccountID(account.getAccountId()));
-        List<GrantedAuthority> authorityList = AuthorityUtils.commaSeparatedStringToAuthorityList(authority);
+        List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(SecurityUtils.generateAuthority(roleService.selectRoleListByUserId(user.getUserId()), menuService.selectMenuListByUserId(user.getUserId())));
         // 封装Authentication
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(account, null, authorityList);
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, authorities);
         // 存入SecurityContextHolder
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         filterChain.doFilter(request, response);

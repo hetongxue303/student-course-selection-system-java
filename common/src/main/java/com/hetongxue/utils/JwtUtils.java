@@ -37,7 +37,7 @@ public class JwtUtils {
     /**
      * 生成token
      *
-     * @param UserId      用户ID
+     * @param UserId   用户ID
      * @param username 用户名
      * @return java.lang.String
      */

@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户实体
+ * 用户表
  *
  * @author 何同学
  */
@@ -27,21 +27,13 @@ public class User implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long userId;
     /**
-     * 学院ID
+     * 用户名称
      */
-    private Long collegeId;
+    private String username;
     /**
-     * 专业ID
+     * 用户密码
      */
-    private Long majorId;
-    /**
-     * 角色ID
-     */
-    private Long roleId;
-    /**
-     * 学号/工号
-     */
-    private Long userNo;
+    private String password;
     /**
      * 用户昵称
      */
@@ -51,6 +43,14 @@ public class User implements Serializable {
      */
     private String realName;
     /**
+     * 用户头像
+     */
+    private String avatar;
+    /**
+     * 用户性别(1:男 2:女 3:保密)
+     */
+    private String gender;
+    /**
      * 用户邮箱
      */
     private String email;
@@ -59,25 +59,25 @@ public class User implements Serializable {
      */
     private String phone;
     /**
-     * 用户性别(0:男 1:女 2:保密)
-     */
-    private String gender;
-    /**
-     * 头像地址
-     */
-    private String avatar;
-    /**
-     * 帐号状态(0:正常 1:停用)
-     */
-    private Boolean status;
-    /**
      * 是否删除(1是 0否)
      */
     private Boolean isDelete;
     /**
-     * 备注
+     * 是否启用(0:正常 1:停用)
+     */
+    private Boolean isEnable;
+    /**
+     * 用户备注
      */
     private String remark;
+    /**
+     * 最后登录ip
+     */
+    private String lastLoginIp;
+    /**
+     * 最后登录时间
+     */
+    private Date lastLoginTime;
     /**
      * 创建时间
      */

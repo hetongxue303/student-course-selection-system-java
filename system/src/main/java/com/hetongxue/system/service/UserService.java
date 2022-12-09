@@ -11,8 +11,11 @@ import com.hetongxue.system.domain.User;
 public interface UserService extends IService<User> {
 
     /**
-     * 根据账户ID查询用户信息
+     * 按用户名查询用户
+     *
+     * @param username 用户名
+     * @return User
      */
-    User selectOneByAccountID(Long accountID);
+    User selectOneByUsername(String username);
 
 }

@@ -46,6 +46,7 @@ public class CaptchaFilter extends OncePerRequestFilter {
             if (Objects.equals(request.getRequestURI(), LOGIN_PATH) && LOGIN_METHOD.equalsIgnoreCase(request.getMethod())) {
                 String code = request.getParameter(CAPTCHA_KEY);
                 String redisCode = (String) redisUtils.getValue(Base.SECURITY_CAPTCHA);
+                // 验证码过期：抛出异常
                 if (Objects.isNull(redisCode)) {
                     throw new CaptchaAuthenticationException("验证码过期");
                 }

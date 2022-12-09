@@ -28,7 +28,7 @@ public class Base {
     public static final String TOKEN_PREFIX = "Bearer ";
 
     // redis
-    public static final long REDIS_TIMEOUT = 3 * 24 * 60 * 60;
+    public static final long REDIS_TIMEOUT = 3 * 24 * 60 * 60;// 3天
     public static final TimeUnit REDIS_TIMEUNIT = TimeUnit.DAYS;
 
 }
