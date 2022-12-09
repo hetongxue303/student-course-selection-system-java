@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 学院表
+ * 课程表
  *
  * @author 何同学
  */
@@ -18,20 +18,28 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("sys_college")
-public class College implements Serializable {
+@TableName("sys_course")
+public class Course implements Serializable {
 
     /**
-     * 学院ID
+     * 课程ID
      */
     @TableId(type = IdType.AUTO)
-    private Long collegeId;
+    private Long courseId;
     /**
-     * 学院名称
+     * 任课老师
      */
-    private String collegeName;
+    private Long userId;
     /**
-     * 学院描述
+     * 课程名称
+     */
+    private String courseName;
+    /**
+     * 课程人数
+     */
+    private Integer count;
+    /**
+     * 课程描述
      */
     private String remark;
     /**

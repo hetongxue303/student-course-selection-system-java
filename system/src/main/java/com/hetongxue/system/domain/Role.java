@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 角色实体
+ * 角色表
  *
  * @author 何同学
  */

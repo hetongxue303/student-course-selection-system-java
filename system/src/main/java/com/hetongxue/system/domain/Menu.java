@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 菜单实体
+ * 菜单表
  *
  * @author 何同学
  */

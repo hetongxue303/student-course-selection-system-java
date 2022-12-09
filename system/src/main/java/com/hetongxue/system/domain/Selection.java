@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 学院表
+ * 选课表
  *
  * @author 何同学
  */
@@ -18,26 +19,30 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("sys_college")
-public class College implements Serializable {
+@TableName("sys_selection")
+public class Selection implements Serializable {
 
     /**
-     * 学院ID
+     * 选课ID
      */
     @TableId(type = IdType.AUTO)
-    private Long collegeId;
+    private Long selectionId;
     /**
-     * 学院名称
+     * 用户ID
      */
-    private String collegeName;
+    private Long userId;
     /**
-     * 学院描述
+     * 课程ID
      */
-    private String remark;
+    private Long courseId;
     /**
-     * 是否删除(1是 0否)
+     * 课程成绩
      */
-    private Boolean isDelete;
+    private BigDecimal score;
+    /**
+     * 是否结课
+     */
+    private Boolean isEnd;
     /**
      * 创建时间
      */
