@@ -75,12 +75,6 @@ public class UserController {
         return Result.Error().setMessage("获取用户信息失败").setCode(HttpStatus.UNAUTHORIZED.value());
     }
 
-    @GetMapping("/get/all/{type}")
-    @LogAnnotation(operate = "获取用户信息 -> 通过用户类型")
-    public Result getUserAll(@PathVariable("type") Integer type) {
-        return Result.Success(userService.selectUserListAll(type)).setMessage("获取成功");
-    }
-
     @PostMapping("/refreshToken")
     @LogAnnotation(operate = "刷新令牌", detail = "前端过期时间刷新当前令牌")
     public Result refreshToken(HttpServletRequest request) {
@@ -102,6 +96,49 @@ public class UserController {
         } catch (JwtAuthenticationException e) {
             return Result.Error().setMessage("刷新token失败,请重新登录！");
         }
+    }
+
+    @GetMapping("/get/all/{type}")
+    @LogAnnotation(operate = "通过用户类型 获取用户列表 ")
+    public Result getUserAll(@PathVariable("type") Integer type) {
+        return Result.Success(userService.getUserListAll(type)).setMessage("获取成功");
+    }
+
+    @GetMapping("/get/all")
+    @LogAnnotation(operate = "获取所有用户列表")
+    public Result getUserAll() {
+        return Result.Success(userService.getUserAll()).setMessage("query all of list success");
+    }
+
+    @GetMapping("/get/page")
+    @LogAnnotation(operate = "分页获取用户列表")
+    public Result getUserPage(Integer currentPage, Integer pageSize, String name) {
+        return Result.Success(userService.getUserPage(currentPage, pageSize, name)).setMessage("query pagination list" + " " + "success");
+    }
+
+    @PostMapping("/insert")
+    @LogAnnotation(operate = "新增用户")
+    public Result addUser(@RequestBody User user) {
+        return userService.addUser(user) > 0 ? Result.Success().setMessage("insert success") : Result.Error().setMessage("insert fail");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @LogAnnotation(operate = "删除用户")
+    public Result delUser(@PathVariable("id") Long id) {
+        return userService.delUser(id) > 0 ? Result.Success().setMessage("delete success") : Result.Error().setMessage("delete fail");
+    }
+
+    @DeleteMapping("/delete/batch")
+    @LogAnnotation(operate = "批量删除用户")
+    public Result delBatchUser(@RequestBody List<Long> ids) {
+        return userService.delBatchUser(ids) > 0 ? Result.Success().setMessage("batch delete success") : Result.Error().setMessage("batch delete fail");
+
+    }
+
+    @PutMapping("/update")
+    @LogAnnotation(operate = "更新用户")
+    public Result updateUser(@RequestBody User user) {
+        return userService.updateUser(user) > 0 ? Result.Success().setMessage("update success") : Result.Error().setMessage("update fail");
     }
 
 }
