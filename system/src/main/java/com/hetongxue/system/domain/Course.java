@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 课程表
+ * 持久对象：课程信息
  *
  * @author 何同学
  */
@@ -38,6 +38,10 @@ public class Course implements Serializable {
      * 课程人数
      */
     private Integer count;
+    /**
+     * 选课人数
+     */
+    private Integer choice;
     /**
      * 课程描述
      */

@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 用户信息返回类
+ * 表现层对象：用户信息
  *
  * @author 何同学
  */
@@ -17,7 +17,7 @@ import java.util.List;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserVo implements Serializable {
+public class UserVO implements Serializable {
 
     /**
      * 用户名
@@ -42,10 +42,10 @@ public class UserVo implements Serializable {
     /**
      * 菜单列表
      */
-    private List<MenuVo> menus;
+    private List<MenuVO> menus;
     /**
      * 路由列表
      */
-    private List<RouterVo> routers;
+    private List<RouterVO> routers;
 
 }

@@ -1,9 +1,9 @@
 package com.hetongxue.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hetongxue.system.domain.Selection;
-import com.hetongxue.system.mapper.SelectionMapper;
-import com.hetongxue.system.service.SelectionService;
+import com.hetongxue.system.domain.Choice;
+import com.hetongxue.system.mapper.ChoiceMapper;
+import com.hetongxue.system.service.ChoiceService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class SelectionServiceImpl extends ServiceImpl<SelectionMapper, Selection> implements SelectionService {
+public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> implements ChoiceService {
 
 }

@@ -2,7 +2,7 @@ package com.hetongxue.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hetongxue.system.domain.Course;
-import com.hetongxue.system.domain.vo.QueryVo;
+import com.hetongxue.system.domain.vo.QueryVO;
 
 import java.util.List;
 
@@ -28,6 +28,40 @@ public interface CourseService extends IService<Course> {
      * @param name        课程名
      * @return QueryVo
      */
-    QueryVo getCoursePage(Integer currentPage, Integer pageSize, String name);
+    QueryVO getCoursePage(Integer currentPage, Integer pageSize, String name);
+
+
+    /**
+     * 添加课程
+     *
+     * @param course 课程信息
+     * @return int
+     */
+    int addCourse(Course course);
+
+    /**
+     * 删除课程
+     *
+     * @param id 课程D
+     * @return int
+     */
+    int delCourse(Long id);
+
+    /**
+     * 批量删除课程
+     *
+     * @param ids 学课ID
+     * @return int
+     */
+    int delBatchCourse(List<Long> ids);
+
+    /**
+     * 更新课程
+     *
+     * @param course 课程信息
+     * @return int
+     */
+    int updateCourse(Course course);
+
 
 }

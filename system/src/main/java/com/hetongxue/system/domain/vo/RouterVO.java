@@ -7,13 +7,13 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 路由VO
+ * 表现层对象：路由
  *
  * @author 何同学
  */
 @Data
 @Accessors(chain = true)
-public class RouterVo implements Serializable {
+public class RouterVO implements Serializable {
 
     /**
      * 路由名称
@@ -34,7 +34,7 @@ public class RouterVo implements Serializable {
     /**
      * 子路由
      */
-    private List<RouterVo> children;
+    private List<RouterVO> children;
 
     @Data
     @Accessors(chain = true)

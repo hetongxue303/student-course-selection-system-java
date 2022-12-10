@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hetongxue.system.domain.Major;
-import com.hetongxue.system.domain.vo.QueryVo;
+import com.hetongxue.system.domain.vo.QueryVO;
 import com.hetongxue.system.mapper.MajorMapper;
 import com.hetongxue.system.service.MajorService;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class MajorServiceImpl extends ServiceImpl<MajorMapper, Major> implements
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public QueryVo getMajorPage(Integer currentPage, Integer pageSize, String name) {
+    public QueryVO getMajorPage(Integer currentPage, Integer pageSize, String name) {
         LambdaQueryWrapper<Major> wrapper = new LambdaQueryWrapper<>();
         if (Objects.nonNull(name)) {
             wrapper.like(Major::getMajorName, name);
@@ -47,7 +47,7 @@ public class MajorServiceImpl extends ServiceImpl<MajorMapper, Major> implements
         wrapper.eq(Major::getIsDelete, false);
         wrapper.orderByAsc(Major::getMajorId);
         Page<Major> list = majorMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
-        return new QueryVo(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), list.getRecords());
+        return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), list.getRecords());
 
     }
 

@@ -1,6 +1,5 @@
-package com.hetongxue.system.domain;
+package com.hetongxue.system.domain.bo;
 
-import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 持久对象：角色信息
+ * 业务对象：课程信息
  *
  * @author 何同学
  */
@@ -18,26 +17,32 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("sys_role")
-public class Role implements Serializable {
+public class CourseBO implements Serializable {
 
     /**
-     * 角色ID
+     * 课程ID
      */
-    @TableId(type = IdType.AUTO)
-    private Long roleId;
+    private Long courseId;
     /**
-     * 角色名称
+     * 任课老师
      */
-    private String roleName;
+    private Long userId;
     /**
-     * 角色key值
+     * 课程名称
      */
-    private String roleKey;
+    private String courseName;
     /**
-     * 帐号状态(0:正常 1:停用)
+     * 课程人数
      */
-    private Boolean status;
+    private Integer count;
+    /**
+     * 已选人数
+     */
+    private Integer choice;
+    /**
+     * 课程描述
+     */
+    private String remark;
     /**
      * 是否删除(1是 0否)
      */
@@ -45,12 +50,10 @@ public class Role implements Serializable {
     /**
      * 创建时间
      */
-    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     /**
      * 更新时间
      */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
 }

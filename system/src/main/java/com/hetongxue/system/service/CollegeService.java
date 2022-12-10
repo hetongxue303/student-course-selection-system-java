@@ -2,7 +2,7 @@ package com.hetongxue.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hetongxue.system.domain.College;
-import com.hetongxue.system.domain.vo.QueryVo;
+import com.hetongxue.system.domain.vo.QueryVO;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public interface CollegeService extends IService<College> {
      * @param name        学院名
      * @return QueryVo
      */
-    QueryVo getCollegePage(Integer currentPage, Integer pageSize, String name);
+    QueryVO getCollegePage(Integer currentPage, Integer pageSize, String name);
 
     /**
      * 添加学院

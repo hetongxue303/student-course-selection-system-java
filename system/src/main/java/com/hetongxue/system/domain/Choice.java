@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 选课表
+ * 持久对象：选课信息
  *
  * @author 何同学
  */
@@ -20,13 +20,13 @@ import java.util.Date;
 @NoArgsConstructor
 @Accessors(chain = true)
 @TableName("sys_selection")
-public class Selection implements Serializable {
+public class Choice implements Serializable {
 
     /**
      * 选课ID
      */
     @TableId(type = IdType.AUTO)
-    private Long selectionId;
+    private Long choiceId;
     /**
      * 用户ID
      */

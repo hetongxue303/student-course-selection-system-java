@@ -7,13 +7,13 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 菜单VO
+ * 表现层对象：菜单
  *
  * @author 何同学
  */
 @Data
 @Accessors(chain = true)
-public class MenuVo implements Serializable {
+public class MenuVO implements Serializable {
 
     /**
      * 菜单名称
@@ -30,6 +30,6 @@ public class MenuVo implements Serializable {
     /**
      * 子菜单
      */
-    private List<MenuVo> children;
+    private List<MenuVO> children;
 
 }

@@ -1,7 +1,7 @@
 package com.hetongxue.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.hetongxue.system.domain.Selection;
+import com.hetongxue.system.domain.Choice;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author 何同学
  */
-public interface SelectionMapper extends BaseMapper<Selection> {
+public interface ChoiceMapper extends BaseMapper<Choice> {
 
     /**
      * 通过用户ID查询课程列表

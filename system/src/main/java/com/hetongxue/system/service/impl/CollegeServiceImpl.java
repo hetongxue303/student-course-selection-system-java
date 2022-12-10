@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hetongxue.system.domain.College;
-import com.hetongxue.system.domain.vo.QueryVo;
+import com.hetongxue.system.domain.vo.QueryVO;
 import com.hetongxue.system.mapper.CollegeMapper;
 import com.hetongxue.system.service.CollegeService;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class CollegeServiceImpl extends ServiceImpl<CollegeMapper, College> impl
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public QueryVo getCollegePage(Integer currentPage, Integer pageSize, String name) {
+    public QueryVO getCollegePage(Integer currentPage, Integer pageSize, String name) {
         LambdaQueryWrapper<College> wrapper = new LambdaQueryWrapper<>();
         if (Objects.nonNull(name)) {
             wrapper.like(College::getCollegeName, name);
@@ -46,7 +46,7 @@ public class CollegeServiceImpl extends ServiceImpl<CollegeMapper, College> impl
         wrapper.eq(College::getIsDelete, false);
         wrapper.orderByAsc(College::getCollegeId);
         Page<College> list = collegeMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
-        return new QueryVo(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), list.getRecords());
+        return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), list.getRecords());
     }
 
     @Override

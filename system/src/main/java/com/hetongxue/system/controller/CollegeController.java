@@ -43,7 +43,7 @@ public class CollegeController {
     @DeleteMapping("/delete/{id}")
     @LogAnnotation(operate = "删除学院")
     public Result delCollege(@PathVariable("id") Long id) {
-        return collegeService.delCollege(id) > 0 ? Result.Success().setMessage("delete success") : Result.Error().setMessage("delele fail");
+        return collegeService.delCollege(id) > 0 ? Result.Success().setMessage("delete success") : Result.Error().setMessage("delete fail");
     }
 
     @DeleteMapping("/delete/batch")
@@ -58,4 +58,5 @@ public class CollegeController {
     public Result updateCollege(@RequestBody College college) {
         return collegeService.updateCollege(college) > 0 ? Result.Success().setMessage("update success") : Result.Error().setMessage("update fail");
     }
+
 }

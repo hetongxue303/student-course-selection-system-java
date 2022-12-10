@@ -3,8 +3,8 @@ package com.hetongxue;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hetongxue.system.domain.Course;
 import com.hetongxue.system.domain.User;
+import com.hetongxue.system.mapper.ChoiceMapper;
 import com.hetongxue.system.mapper.CourseMapper;
-import com.hetongxue.system.mapper.SelectionMapper;
 import com.hetongxue.system.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +25,7 @@ public class TestApplication {
     @Resource
     private UserMapper userMapper;
     @Resource
-    private SelectionMapper selectionMapper;
+    private ChoiceMapper selectionMapper;
 
 
     @Test

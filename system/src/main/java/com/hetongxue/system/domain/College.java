@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 学院表
+ * 持久对象：学院信息
  *
  * @author 何同学
  */

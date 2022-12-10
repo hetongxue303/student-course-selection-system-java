@@ -1,6 +1,5 @@
-package com.hetongxue.system.domain;
+package com.hetongxue.system.domain.bo;
 
-import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 持久对象：用户信息
+ * 业务对象：用户信息
  *
  * @author 何同学
  */
@@ -18,22 +17,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("sys_user")
-public class User implements Serializable {
+public class UserBO implements Serializable {
+
 
     /**
      * 用户ID
      */
-    @TableId(type = IdType.AUTO)
     private Long userId;
-    /**
-     * 用户名称
-     */
-    private String username;
-    /**
-     * 用户密码
-     */
-    private String password;
     /**
      * 用户昵称
      */
@@ -89,12 +79,10 @@ public class User implements Serializable {
     /**
      * 创建时间
      */
-    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     /**
      * 更新时间
      */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
 }

@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * tokenVo
+ * 表现层对象：通用分页查询结果
  *
  * @author 何同学
  */
@@ -16,15 +16,31 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class TokenVo implements Serializable {
+public class QueryVO implements Serializable {
 
     /**
-     * token
+     * 当前页
      */
-    private String token;
+    Long page;
+
     /**
-     * 过期时间
+     * 页面大小
      */
-    private long expireTime;
+    Long size;
+
+    /**
+     * 总条数
+     */
+    Long total;
+
+    /**
+     * 总共页数
+     */
+    Long pages;
+
+    /**
+     * 数据记录
+     */
+    Object records;
 
 }

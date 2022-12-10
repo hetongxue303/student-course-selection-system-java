@@ -2,7 +2,7 @@ package com.hetongxue.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hetongxue.system.domain.Major;
-import com.hetongxue.system.domain.vo.QueryVo;
+import com.hetongxue.system.domain.vo.QueryVO;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public interface MajorService extends IService<Major> {
      * @param name        专业名
      * @return QueryVo
      */
-    QueryVo getMajorPage(Integer currentPage, Integer pageSize, String name);
+    QueryVO getMajorPage(Integer currentPage, Integer pageSize, String name);
 
     /**
      * 添加专业

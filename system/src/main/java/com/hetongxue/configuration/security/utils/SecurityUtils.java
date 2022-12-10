@@ -3,8 +3,8 @@ package com.hetongxue.configuration.security.utils;
 import com.hetongxue.system.domain.Menu;
 import com.hetongxue.system.domain.Role;
 import com.hetongxue.system.domain.User;
-import com.hetongxue.system.domain.vo.MenuVo;
-import com.hetongxue.system.domain.vo.RouterVo;
+import com.hetongxue.system.domain.vo.MenuVO;
+import com.hetongxue.system.domain.vo.RouterVO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
@@ -42,8 +42,8 @@ public class SecurityUtils {
      * @param parentId 父ID
      * @return java.util.List<com.hetongxue.system.domain.vo.MenuVo> - 菜单列表
      */
-    public static List<MenuVo> generateMenu(List<Menu> menuList, Long parentId) {
-        List<MenuVo> menus = new ArrayList<>();
+    public static List<MenuVO> generateMenu(List<Menu> menuList, Long parentId) {
+        List<MenuVO> menus = new ArrayList<>();
         // 判断是否为空
         Optional.ofNullable(menuList)
                 // 不为空时创建新的数组
@@ -58,7 +58,7 @@ public class SecurityUtils {
                     if (Objects.isNull(item.getMenuTitle())) {
                         generateMenu(menuList, item.getMenuId()).stream().filter(Objects::nonNull).forEach(menus::add);
                     } else {
-                        menus.add(new MenuVo().setName(item.getMenuTitle()).setPath(item.getPath()).setIcon(item.getIcon()).setChildren(generateMenu(menuList, item.getMenuId())));
+                        menus.add(new MenuVO().setName(item.getMenuTitle()).setPath(item.getPath()).setIcon(item.getIcon()).setChildren(generateMenu(menuList, item.getMenuId())));
                     }
                 });
         return menus;
@@ -71,8 +71,8 @@ public class SecurityUtils {
      * @param parentId 父ID
      * @return java.util.List<com.hetongxue.system.domain.vo.RouterVo> - 路由列表
      */
-    public static List<RouterVo> generateRouter(List<Menu> menuList, Long parentId) {
-        List<RouterVo> routers = new ArrayList<>();
+    public static List<RouterVO> generateRouter(List<Menu> menuList, Long parentId) {
+        List<RouterVO> routers = new ArrayList<>();
         // 判断是否为空
         Optional.ofNullable(menuList)
                 // 不为空时创建新的数组
@@ -82,7 +82,7 @@ public class SecurityUtils {
                 // 过滤 不为空 和 对应父ID 的数据 以及类型不为 按钮 的
                 .filter(item -> item != null && Objects.equals(item.getParentId(), parentId) && item.getMenuType() != BUTTON_KEY)
                 // 遍历循环
-                .forEach(item -> routers.add(new RouterVo().setName(item.getMenuName()).setPath(item.getPath()).setComponent(item.getComponent()).setMeta(new RouterVo.MetaVo().setTitle(item.getMenuTitle()).setIcon(item.getIcon()).setCache(item.getIsCache()).setShow(item.getIsDisplay())
+                .forEach(item -> routers.add(new RouterVO().setName(item.getMenuName()).setPath(item.getPath()).setComponent(item.getComponent()).setMeta(new RouterVO.MetaVo().setTitle(item.getMenuTitle()).setIcon(item.getIcon()).setCache(item.getIsCache()).setShow(item.getIsDisplay())
                         // 当类型是目录时 不存在权限代码
                         .setPermission(item.getMenuType() != LIST_KEY ? menuList.stream()
                                 // 过滤权限代码 不为空 且 不能是目录
@@ -159,5 +159,5 @@ public class SecurityUtils {
     public static List<Menu> removeNullTitle(List<Menu> menus) {
         return Optional.ofNullable(menus).orElse(new ArrayList<>()).stream().filter(item -> item.getMenuTitle() != null).collect(Collectors.toList());
     }
-    
+
 }
