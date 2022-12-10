@@ -9,6 +9,7 @@ import com.hetongxue.system.domain.vo.QueryVO;
 import com.hetongxue.system.mapper.UserMapper;
 import com.hetongxue.system.service.UserService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private PasswordEncoder passwordEncoder;
+
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -86,7 +90,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int addUser(User user) {
-        return userMapper.insert(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userMapper.insert(user) > 0 ? userMapper.insertUserRole(user.getUserId(), Long.valueOf(user.getType())) : 0;
     }
 
     @Override
