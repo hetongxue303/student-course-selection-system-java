@@ -38,7 +38,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
     public User selectOneByUsername(String username) {
-        return userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getUsername, username);
+        return userMapper.selectOne(wrapper);
     }
 
     @Override
@@ -69,19 +71,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public QueryVO getUserPage(Integer currentPage, Integer pageSize, String name) {
+    public QueryVO getUserPage(Integer currentPage, Integer pageSize, User user) {
         ArrayList<UserBO> userBO = new ArrayList<>();
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        if (Objects.nonNull(name)) {
-            wrapper.like(User::getUsername, name);
+        if (Objects.nonNull(user.getUsername())) {
+            wrapper.like(User::getUsername, user.getUsername());
+        }
+        if (Objects.nonNull(user.getIsEnable())) {
+            wrapper.eq(User::getIsEnable, user.getIsEnable());
+        }
+        if (Objects.nonNull(user.getType())) {
+            wrapper.eq(User::getType, user.getType());
         }
         wrapper.eq(User::getIsDelete, false);
         wrapper.orderByAsc(User::getUserId);
         Page<User> list = userMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
         List<User> users = Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>());
-        users.forEach(user -> {
+        users.forEach(item -> {
             UserBO bo = new UserBO();
-            BeanUtils.copyProperties(user, bo);
+            BeanUtils.copyProperties(item, bo);
             userBO.add(bo);
         });
         return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), userBO);

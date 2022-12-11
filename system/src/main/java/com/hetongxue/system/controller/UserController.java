@@ -112,8 +112,8 @@ public class UserController {
 
     @GetMapping("/get/page")
     @LogAnnotation(operate = "分页获取用户列表")
-    public Result getUserPage(Integer currentPage, Integer pageSize, String name) {
-        return Result.Success(userService.getUserPage(currentPage, pageSize, name)).setMessage("query pagination list" + " " + "success");
+    public Result getUserPage(Integer currentPage, Integer pageSize, User user) {
+        return Result.Success(userService.getUserPage(currentPage, pageSize, user)).setMessage("query pagination list success");
     }
 
     @PostMapping("/insert")

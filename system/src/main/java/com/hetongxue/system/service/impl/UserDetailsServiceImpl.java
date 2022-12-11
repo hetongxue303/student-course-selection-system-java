@@ -40,7 +40,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (Objects.isNull(user)) {
             throw new UsernameNotFoundException("用户名或密码错误");
         }
-        
+        if (user.getIsDelete()) {
+            throw new UsernameNotFoundException("用户不存在");
+        }
+
         // 查询角色列表
         List<Role> roleList = roleService.selectRoleListByUserId(user.getUserId());
         // 查询菜单列表
