@@ -18,6 +18,8 @@ spring:
   devtools:
     restart:
       enabled: true
+    livereload:
+      enabled: true
   # jackson
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss

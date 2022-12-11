@@ -1,13 +1,18 @@
 package com.hetongxue;
 
-import com.hetongxue.system.mapper.ChoiceMapper;
-import com.hetongxue.system.mapper.CourseMapper;
-import com.hetongxue.system.mapper.UserMapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.hetongxue.system.domain.Menu;
+import com.hetongxue.system.domain.bo.MenuBO;
+import com.hetongxue.system.mapper.MenuMapper;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.BeanUtils;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 测试类
@@ -18,31 +23,38 @@ import javax.annotation.Resource;
 public class TestApplication {
 
     @Resource
-    private CourseMapper courseMapper;
-    @Resource
-    private UserMapper userMapper;
-    @Resource
-    private ChoiceMapper selectionMapper;
-    @Resource
-    private PasswordEncoder passwordEncoder;
+    private MenuMapper menuMapper;
 
+
+    List<MenuBO> getList(List<Menu> menuList, Long pid) {
+        List<MenuBO> menus = new ArrayList<>();
+        // 判断是否为空
+        Optional.ofNullable(menuList)
+                // 不为空时创建新的数组
+                .orElse(new ArrayList<>())
+                // 转换流
+                .stream()
+                // 过滤:不为空 类型不是按钮 等于父ID
+                .filter(item -> Objects.nonNull(item) && Objects.equals(item.getParentId(), pid))
+                // 循环遍历
+                .forEach(item -> {
+                    // 如果你的菜单标题为空 则只需要拿它对应的子菜单
+                    if (Objects.nonNull(item.getMenuTitle())) {
+                        MenuBO bo = new MenuBO();
+                        BeanUtils.copyProperties(item, bo);
+                        menus.add(bo.setChildren(getList(menuList, item.getMenuId())));
+                    } else {
+                        getList(menuList, item.getMenuId()).stream().filter(Objects::nonNull).forEach(menus::add);
+                    }
+                });
+        return menus;
+    }
 
     @Test
     void test() {
-//        User student = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, "2021230522"));
-//        User teacher = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, "100522"));
-//        List<Course> courses = courseMapper.selectList(new LambdaQueryWrapper<Course>().eq(Course::getUserId, teacher.getUserId()));
-////        List<Selection> selections = selectionMapper.selectList(new LambdaQueryWrapper<Selection>().eq(Selection::getUserId, student.getUserId()));
-//        List<Course> courseList = courseMapper.selectList(new LambdaQueryWrapper<Course>().in(Course::getCourseId, selectionMapper.selectCourseIdList(student.getUserId())));
-//        System.out.println("\n\n\n==============分界线===================");
-//        System.out.println("学生：" + student.getNickName());
-//        System.out.println("课程：");
-//        courseList.forEach(item -> System.out.println(item.getCourseName()));
-//        System.out.println("=========================================");
-//        System.out.println("教师：" + teacher.getNickName());
-//        System.out.println("课程：");
-//        courses.forEach(item -> System.out.println(item.getCourseName()));
-        System.out.println("passwordEncoder.encode(\"123456\") = " + passwordEncoder.encode("123456"));
-    }
+        // 查询目录
+        List<Menu> list = menuMapper.selectList(new LambdaQueryWrapper<Menu>().eq(Menu::getIsDelete, false));
+        getList(list, 0L).forEach(System.out::println);
 
+    }
 }

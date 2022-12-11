@@ -352,6 +352,8 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <fork>true</fork>
+                    <addResources>true</addResources>
                 </configuration>
             </plugin>
         </plugins>
