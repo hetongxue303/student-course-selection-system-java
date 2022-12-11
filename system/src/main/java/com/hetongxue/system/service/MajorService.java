@@ -25,10 +25,10 @@ public interface MajorService extends IService<Major> {
      *
      * @param currentPage 当前页
      * @param pageSize    页面大小
-     * @param name        专业名
+     * @param query       查询信息
      * @return QueryVo
      */
-    QueryVO getMajorPage(Integer currentPage, Integer pageSize, String name);
+    QueryVO getMajorPage(Integer currentPage, Integer pageSize, Major query);
 
     /**
      * 添加专业

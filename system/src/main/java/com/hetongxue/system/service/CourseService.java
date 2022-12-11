@@ -25,10 +25,10 @@ public interface CourseService extends IService<Course> {
      *
      * @param currentPage 当前页
      * @param pageSize    页面大小
-     * @param name        课程名
+     * @param query       查询信息
      * @return QueryVo
      */
-    QueryVO getCoursePage(Integer currentPage, Integer pageSize, String name);
+    QueryVO getCoursePage(Integer currentPage, Integer pageSize, Course query);
 
 
     /**

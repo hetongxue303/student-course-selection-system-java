@@ -13,8 +13,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 专业业务实现
@@ -39,15 +41,18 @@ public class MajorServiceImpl extends ServiceImpl<MajorMapper, Major> implements
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public QueryVO getMajorPage(Integer currentPage, Integer pageSize, String name) {
+    public QueryVO getMajorPage(Integer currentPage, Integer pageSize, Major query) {
         LambdaQueryWrapper<Major> wrapper = new LambdaQueryWrapper<>();
-        if (Objects.nonNull(name)) {
-            wrapper.like(Major::getMajorName, name);
+        if (Objects.nonNull(query.getMajorName())) {
+            wrapper.like(Major::getMajorName, query.getMajorName());
         }
         wrapper.eq(Major::getIsDelete, false);
         wrapper.orderByAsc(Major::getMajorId);
         Page<Major> list = majorMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
-        return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), list.getRecords());
+
+        List<Major> majors = Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>());
+
+        return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), majors);
 
     }
 

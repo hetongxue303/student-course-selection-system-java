@@ -25,10 +25,10 @@ public interface CollegeService extends IService<College> {
      *
      * @param currentPage 当前页
      * @param pageSize    页面大小
-     * @param name        学院名
+     * @param query       查询信息
      * @return QueryVo
      */
-    QueryVO getCollegePage(Integer currentPage, Integer pageSize, String name);
+    QueryVO getCollegePage(Integer currentPage, Integer pageSize, College query);
 
     /**
      * 添加学院

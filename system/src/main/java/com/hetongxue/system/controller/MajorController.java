@@ -30,8 +30,8 @@ public class MajorController {
 
     @GetMapping("/get/page")
     @LogAnnotation(operate = "分页获取专业列表")
-    public Result getMajorPage(Integer currentPage, Integer pageSize, String name) {
-        return Result.Success(majorService.getMajorPage(currentPage, pageSize, name)).setMessage("query pagination list success");
+    public Result getMajorPage(Integer currentPage, Integer pageSize, Major query) {
+        return Result.Success(majorService.getMajorPage(currentPage, pageSize, query)).setMessage("query pagination list success");
 
     }
 

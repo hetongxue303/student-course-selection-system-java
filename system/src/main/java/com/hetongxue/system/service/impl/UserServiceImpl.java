@@ -71,27 +71,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public QueryVO getUserPage(Integer currentPage, Integer pageSize, User user) {
+    public QueryVO getUserPage(Integer currentPage, Integer pageSize, User query) {
         ArrayList<UserBO> userBO = new ArrayList<>();
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        if (Objects.nonNull(user.getUsername())) {
-            wrapper.like(User::getUsername, user.getUsername());
+        if (Objects.nonNull(query.getUsername())) {
+            wrapper.like(User::getUsername, query.getUsername());
         }
-        if (Objects.nonNull(user.getIsEnable())) {
-            wrapper.eq(User::getIsEnable, user.getIsEnable());
+        if (Objects.nonNull(query.getIsEnable())) {
+            wrapper.eq(User::getIsEnable, query.getIsEnable());
         }
-        if (Objects.nonNull(user.getType())) {
-            wrapper.eq(User::getType, user.getType());
+        if (Objects.nonNull(query.getType())) {
+            wrapper.eq(User::getType, query.getType());
         }
         wrapper.eq(User::getIsDelete, false);
         wrapper.orderByAsc(User::getUserId);
         Page<User> list = userMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
-        List<User> users = Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>());
-        users.forEach(item -> {
+
+        Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>()).forEach(item -> {
             UserBO bo = new UserBO();
             BeanUtils.copyProperties(item, bo);
             userBO.add(bo);
         });
+
         return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), userBO);
     }
 

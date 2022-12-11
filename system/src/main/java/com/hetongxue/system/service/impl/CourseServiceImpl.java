@@ -3,7 +3,6 @@ package com.hetongxue.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hetongxue.configuration.security.utils.SecurityUtils;
 import com.hetongxue.system.domain.Course;
 import com.hetongxue.system.domain.bo.CourseBO;
 import com.hetongxue.system.domain.vo.QueryVO;
@@ -45,25 +44,23 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public QueryVO getCoursePage(Integer currentPage, Integer pageSize, String name) {
-        List<CourseBO> courseBO = new ArrayList<>();
+    public QueryVO getCoursePage(Integer currentPage, Integer pageSize, Course query) {
         LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
-        if (Objects.nonNull(name)) {
-            wrapper.like(Course::getCourseName, name);
+        if (Objects.nonNull(query.getCourseName())) {
+            wrapper.like(Course::getCourseName, query.getCourseName());
         }
         wrapper.eq(Course::getIsDelete, false);
         wrapper.orderByAsc(Course::getCourseId);
         Page<Course> list = courseMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
 
-        if (SecurityUtils.getUser().getIsAdmin()) {
-            Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>()).forEach(course -> {
-                CourseBO bo = new CourseBO();
-                BeanUtils.copyProperties(course, bo);
-                courseBO.add(bo);
-            });
-            return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), courseBO);
-        }
-        return null;
+        List<CourseBO> courseBO = new ArrayList<>();
+        Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>()).forEach(course -> {
+            CourseBO bo = new CourseBO();
+            BeanUtils.copyProperties(course, bo);
+            courseBO.add(bo);
+        });
+
+        return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), courseBO);
     }
 
     @Override

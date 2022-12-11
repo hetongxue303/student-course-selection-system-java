@@ -29,8 +29,8 @@ public class CourseController {
 
     @GetMapping("/get/page")
     @LogAnnotation(operate = "分页获取课程列表")
-    public Result getCollegePage(Integer currentPage, Integer pageSize, String name) {
-        return Result.Success(courseService.getCoursePage(currentPage, pageSize, name)).setMessage("query pagination list success");
+    public Result getCollegePage(Integer currentPage, Integer pageSize, Course query) {
+        return Result.Success(courseService.getCoursePage(currentPage, pageSize, query)).setMessage("query pagination list success");
     }
 
 

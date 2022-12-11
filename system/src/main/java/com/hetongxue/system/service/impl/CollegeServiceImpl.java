@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 学院业务实现
@@ -38,15 +40,18 @@ public class CollegeServiceImpl extends ServiceImpl<CollegeMapper, College> impl
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public QueryVO getCollegePage(Integer currentPage, Integer pageSize, String name) {
+    public QueryVO getCollegePage(Integer currentPage, Integer pageSize, College query) {
         LambdaQueryWrapper<College> wrapper = new LambdaQueryWrapper<>();
-        if (Objects.nonNull(name)) {
-            wrapper.like(College::getCollegeName, name);
+        if (Objects.nonNull(query.getCollegeName())) {
+            wrapper.like(College::getCollegeName, query.getCollegeName());
         }
         wrapper.eq(College::getIsDelete, false);
         wrapper.orderByAsc(College::getCollegeId);
         Page<College> list = collegeMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
-        return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), list.getRecords());
+
+        List<College> colleges = Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>());
+        
+        return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), colleges);
     }
 
     @Override

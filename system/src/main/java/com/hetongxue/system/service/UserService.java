@@ -41,10 +41,10 @@ public interface UserService extends IService<User> {
      * 分页获取用户列表
      *
      * @param currentPage 当前页
-     * @param user        用户信息
+     * @param query       查询信息
      * @return QueryVo
      */
-    QueryVO getUserPage(Integer currentPage, Integer pageSize, User user);
+    QueryVO getUserPage(Integer currentPage, Integer pageSize, User query);
 
     /**
      * 添加用户
