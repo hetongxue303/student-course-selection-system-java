@@ -3,6 +3,7 @@ package com.hetongxue.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hetongxue.handler.exception.DatabaseUpdateException;
 import com.hetongxue.system.domain.Role;
 import com.hetongxue.system.domain.vo.QueryVO;
 import com.hetongxue.system.mapper.RoleMapper;
@@ -40,7 +41,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public List<Role> getRoleAll() {
         LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Role::getIsDelete, false);
-        wrapper.orderByAsc(Role::getRoleId);
+        wrapper.orderByAsc(Role::getLevel);
         return roleMapper.selectList(wrapper);
     }
 
@@ -88,6 +89,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int updateRole(Role role) {
+        if (roleMapper.selectList(new LambdaQueryWrapper<Role>().eq(Role::getLevel, role.getLevel())).size() > 0) {
+            throw new DatabaseUpdateException("级别重复");
+        }
         return roleMapper.updateById(role);
     }
 

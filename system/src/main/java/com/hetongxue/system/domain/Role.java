@@ -39,6 +39,10 @@ public class Role implements Serializable {
      */
     private Integer level;
     /**
+     * 数据权限
+     */
+    private String dataScope;
+    /**
      * 角色描述
      */
     private String description;
