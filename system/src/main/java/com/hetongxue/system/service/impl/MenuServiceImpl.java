@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 菜单业务实现
@@ -44,27 +43,17 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public List<MenuBO> selectMenuListToTable(Long parentId) {
         LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Menu::getIsDelete, false);
+
         return getMenuListToTable(menuMapper.selectList(wrapper), parentId);
     }
 
     List<MenuBO> getMenuListToTable(List<Menu> menuList, Long parentId) {
         List<MenuBO> menus = new ArrayList<>();
-        Optional.ofNullable(menuList).orElse(new ArrayList<>())
-                //
-                .stream()
-                //
-                .filter(item -> Objects.nonNull(item) && Objects.equals(item.getParentId(), parentId))
-                //
-                .forEach(item -> {
-                    if (Objects.nonNull(item.getMenuTitle())) {
-                        MenuBO bo = new MenuBO();
-                        BeanUtils.copyProperties(item, bo);
-                        List<Menu> collect = menuList.stream().filter(sub -> Objects.equals(sub.getParentId(), parentId) && Objects.nonNull(sub.getComponent())).collect(Collectors.toList());
-                        menus.add(bo.setHasChildren(collect.size() > 0));
-                    } else {
-                        getMenuListToTable(menuList, item.getMenuId()).stream().filter(Objects::nonNull).forEach(menus::add);
-                    }
-                });
+        Optional.ofNullable(menuList).orElse(new ArrayList<>()).stream().filter(item -> Objects.nonNull(item) && Objects.equals(item.getParentId(), parentId)).forEach(item -> {
+            MenuBO bo = new MenuBO();
+            BeanUtils.copyProperties(item, bo);
+            menus.add(bo.setHasChildren(getMenuListToTable(menuList, item.getMenuId()).size() > 0));
+        });
         return menus;
     }
 
