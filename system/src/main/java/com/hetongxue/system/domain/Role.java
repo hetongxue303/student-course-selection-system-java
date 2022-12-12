@@ -35,9 +35,17 @@ public class Role implements Serializable {
      */
     private String roleKey;
     /**
-     * 帐号状态(0:正常 1:停用)
+     * 角色级别
      */
-    private Boolean status;
+    private Integer level;
+    /**
+     * 角色描述
+     */
+    private String description;
+    /**
+     * 是否启用(1是 0否)
+     */
+    private Boolean isEnable;
     /**
      * 是否删除(1是 0否)
      */
