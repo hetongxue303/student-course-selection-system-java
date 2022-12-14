@@ -22,8 +22,13 @@ public class MenuController {
     private MenuService menuService;
 
     @GetMapping("/tree")
-    public Result getMenuToTree(Integer currentPage, Integer pageSize, Menu query) {
-        return Result.Success(menuService.selectMenuTree(query)).setMessage("query list of menu success");
+    public Result getMenuToTree(Long parentId) {
+        return Result.Success(menuService.selectMenuToTree(parentId)).setMessage("query list of menu success");
+    }
+
+    @GetMapping("/table/tree")
+    public Result getMenuTableToTree(Integer currentPage, Integer pageSize, Menu query) {
+        return Result.Success(menuService.selectMenuTableToTree(query)).setMessage("query list of menu success");
     }
 
     @PostMapping("/insert")
@@ -50,4 +55,11 @@ public class MenuController {
     public Result updateCollege(@RequestBody Menu Menu) {
         return menuService.updateMenu(Menu) > 0 ? Result.Success().setMessage("update success") : Result.Error().setMessage("update fail");
     }
+
+    @GetMapping("/selection/tree")
+    @LogAnnotation(operate = "获取对应角色的角色菜单列表")
+    public Result getMenuListByRoleId(Long roleId) {
+        return Result.Success(menuService.getMenuListByRoleId(roleId)).setMessage("query all of list success");
+    }
+
 }

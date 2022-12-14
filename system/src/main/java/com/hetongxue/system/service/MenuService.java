@@ -3,6 +3,7 @@ package com.hetongxue.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hetongxue.system.domain.Menu;
 import com.hetongxue.system.domain.bo.MenuBO;
+import com.hetongxue.system.domain.vo.MenuTreeVO;
 import com.hetongxue.system.domain.vo.QueryVO;
 
 import java.util.List;
@@ -25,10 +26,19 @@ public interface MenuService extends IService<Menu> {
     /**
      * 按树格式查询菜单列表
      *
+     * @param parentId 父ID
+     * @return List
+     */
+    List<MenuTreeVO> selectMenuToTree(Long parentId);
+
+    /**
+     * 按树格式查询菜单列表
+     *
      * @param menu 查询信息
      * @return List
      */
-    List<MenuBO> selectMenuTree(Menu menu);
+    List<MenuBO> selectMenuTableToTree(Menu menu);
+
 
     /**
      * 按树格式分页查询菜单列表
@@ -71,5 +81,12 @@ public interface MenuService extends IService<Menu> {
      * @return int
      */
     int updateMenu(Menu menu);
+
+    /**
+     * 获取对应角色的角色菜单列表
+     *
+     * @param roleId 角色ID
+     */
+    List<MenuTreeVO> getMenuListByRoleId(Long roleId);
 
 }

@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 持久对象：角色信息
@@ -64,5 +65,12 @@ public class Role implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
+
+    
+    /**
+     * 菜单列表
+     */
+    @TableField(exist = false)
+    private List<Menu> menus;
 
 }

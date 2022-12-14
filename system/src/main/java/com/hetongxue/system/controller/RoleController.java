@@ -50,7 +50,6 @@ public class RoleController {
     @LogAnnotation(operate = "批量删除角色")
     public Result delBatchRole(@RequestBody List<Long> ids) {
         return roleService.delBatchRole(ids) > 0 ? Result.Success().setMessage("batch delete success") : Result.Error().setMessage("batch delete fail");
-
     }
 
     @PutMapping("/update")

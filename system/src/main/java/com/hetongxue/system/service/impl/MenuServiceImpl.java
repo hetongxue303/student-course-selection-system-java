@@ -4,20 +4,24 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hetongxue.system.domain.Menu;
+import com.hetongxue.system.domain.RoleMenu;
 import com.hetongxue.system.domain.bo.MenuBO;
+import com.hetongxue.system.domain.vo.MenuTreeVO;
 import com.hetongxue.system.domain.vo.QueryVO;
 import com.hetongxue.system.mapper.MenuMapper;
+import com.hetongxue.system.mapper.RoleMenuMapper;
 import com.hetongxue.system.service.MenuService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import utils.MenuFilterUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 菜单业务实现
@@ -30,6 +34,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Resource
     private MenuMapper menuMapper;
+    @Resource
+    private RoleMenuMapper roleMenuMapper;
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -42,7 +48,17 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public List<MenuBO> selectMenuTree(Menu query) {
+    public List<MenuTreeVO> selectMenuToTree(Long parentId) {
+        LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Menu::getIsDelete, false);
+        wrapper.orderByAsc(Menu::getSort);
+
+        return MenuFilterUtils.filterMenuToMenuTree(menuMapper.selectList(wrapper), parentId);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public List<MenuBO> selectMenuTableToTree(Menu query) {
         LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
         if (Objects.nonNull(query.getMenuTitle())) {
             wrapper.like(Menu::getMenuTitle, query.getMenuTitle());
@@ -50,7 +66,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         wrapper.eq(Menu::getIsDelete, false);
         wrapper.orderByAsc(Menu::getSort);
 
-        return filterMenuList(menuMapper.selectList(wrapper), query.getParentId());
+        return MenuFilterUtils.filterMenuToMenuBO(menuMapper.selectList(wrapper), query.getParentId());
     }
 
 
@@ -64,7 +80,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         wrapper.eq(Menu::getIsDelete, false);
         Page<Menu> page = menuMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
 
-        return new QueryVO(page.getCurrent(), page.getSize(), page.getTotal(), page.getPages(), filterMenuList(page.getRecords(), query.getParentId()));
+        return new QueryVO(page.getCurrent(), page.getSize(), page.getTotal(), page.getPages(), MenuFilterUtils.filterMenuToMenuBO(page.getRecords(), query.getParentId()));
     }
 
     @Override
@@ -99,22 +115,23 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return menuMapper.updateById(menu);
     }
 
-    /**
-     * 过滤菜单
-     *
-     * @param menuList 菜单列表
-     * @param parentId 父ID
-     * @return List
-     */
-    private List<MenuBO> filterMenuList(List<Menu> menuList, Long parentId) {
-        List<MenuBO> menus = new ArrayList<>();
-        Optional.ofNullable(menuList).orElse(new ArrayList<>()).stream().filter(item -> Objects.nonNull(item) && Objects.equals(item.getParentId(), parentId)).forEach(item -> {
-            MenuBO bo = new MenuBO();
-            BeanUtils.copyProperties(item, bo);
-            List<MenuBO> menuBo = filterMenuList(menuList, item.getMenuId());
-            menus.add(bo.setHasChildren(menuBo.size() > 0));
-        });
-        return menus;
+    @Override
+    public List<MenuTreeVO> getMenuListByRoleId(Long roleId) {
+        List<RoleMenu> list = roleMenuMapper.selectList(new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, roleId));
+        List<Long> menuIds = Optional.ofNullable(list).orElse(new ArrayList<>()).stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
+        List<MenuTreeVO> result = new ArrayList<>();
+        
+        if (menuIds.size() > 0) {
+            LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
+            wrapper.in(Menu::getMenuId, menuIds);
+            wrapper.orderByAsc(Menu::getSort);
+            List<Menu> menuList = menuMapper.selectList(wrapper);
+            Optional.ofNullable(menuList).orElse(new ArrayList<>()).stream().filter(Objects::nonNull).forEach(item -> {
+                result.add(new MenuTreeVO(item.getMenuId(), item.getMenuTitle(), false, false, null));
+            });
+        }
+
+        return result;
     }
 
 }

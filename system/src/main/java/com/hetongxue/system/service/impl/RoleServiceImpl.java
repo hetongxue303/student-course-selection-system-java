@@ -4,9 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hetongxue.handler.exception.DatabaseUpdateException;
+import com.hetongxue.system.domain.Menu;
 import com.hetongxue.system.domain.Role;
+import com.hetongxue.system.domain.RoleMenu;
 import com.hetongxue.system.domain.vo.QueryVO;
+import com.hetongxue.system.mapper.MenuMapper;
 import com.hetongxue.system.mapper.RoleMapper;
+import com.hetongxue.system.mapper.RoleMenuMapper;
 import com.hetongxue.system.service.RoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 角色业务实现
@@ -29,6 +34,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Resource
     private RoleMapper roleMapper;
+    @Resource
+    private RoleMenuMapper roleMenuMapper;
+    @Resource
+    private MenuMapper menuMapper;
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -54,11 +63,22 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         }
         wrapper.eq(Role::getIsDelete, false);
         wrapper.orderByAsc(Role::getRoleId);
-        Page<Role> list = roleMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
+        Page<Role> page = roleMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
 
-        List<Role> colleges = Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>());
+        ArrayList<Role> roles = new ArrayList<>();
+        Optional.ofNullable(page.getRecords()).orElse(new ArrayList<>()).forEach(item -> {
+            List<RoleMenu> menus = roleMenuMapper.selectList(new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, item.getRoleId()));
+            List<Long> menuIds = Optional.ofNullable(menus).orElse(new ArrayList<>()).stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
+            if (menuIds.size() > 0) {
+                LambdaQueryWrapper<Menu> menuWrapper = new LambdaQueryWrapper<>();
+                menuWrapper.in(Menu::getMenuId, menuIds);
+                menuWrapper.orderByAsc(Menu::getSort);
+                item.setMenus(menuMapper.selectList(menuWrapper));
+            }
+            roles.add(item);
+        });
 
-        return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), colleges);
+        return new QueryVO(page.getCurrent(), page.getSize(), page.getTotal(), page.getPages(), roles);
     }
 
     @Override
