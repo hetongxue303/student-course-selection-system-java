@@ -1,22 +1,11 @@
 package com.hetongxue.configuration.web;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.hetongxue.base.constant.Base;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.TimeZone;
 
 /**
  * springweb配置类
@@ -31,10 +20,10 @@ public class SpringWebConfiguration implements WebMvcConfigurer {
      * 过滤白名单
      */
     private final String[] classpathResourceLocations = {"classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "classpath:/META-INF/resources/webjars/"};
-    @Value("${spring.jackson.time-zone}")
-    private String timeZone;
-    @Value("${spring.jackson.date-format}")
-    private String dateFormat;
+//    @Value("${spring.jackson.time-zone}")
+//    private String timeZone;
+//    @Value("${spring.jackson.date-format}")
+//    private String dateFormat;
 
     /**
      * 资源处理器
@@ -67,18 +56,18 @@ public class SpringWebConfiguration implements WebMvcConfigurer {
     /**
      * 解决json返回时间显示时间戳问题
      */
-    @Override
-    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        ObjectMapper objectMapper = converter.getObjectMapper();
-        // 生成JSON时,将所有Long转换成String
-        SimpleModule simpleModule = new SimpleModule();
-        simpleModule.addSerializer(Long.class, ToStringSerializer.instance).addSerializer(Long.TYPE, ToStringSerializer.instance);
-        // 时间格式化
-        objectMapper.registerModule(simpleModule).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).setDateFormat(new SimpleDateFormat(dateFormat)).setTimeZone(TimeZone.getTimeZone(timeZone));
-        // 设置格式化内容
-        converter.setObjectMapper(objectMapper);
-        converters.add(0, converter);
-    }
+//    @Override
+//    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+//        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+//        ObjectMapper objectMapper = converter.getObjectMapper();
+//        // 生成JSON时,将所有Long转换成String
+//        SimpleModule simpleModule = new SimpleModule();
+//        simpleModule.addSerializer(Long.class, ToStringSerializer.instance).addSerializer(Long.TYPE, ToStringSerializer.instance);
+//        // 时间格式化
+//        objectMapper.registerModule(simpleModule).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).setDateFormat(new SimpleDateFormat(dateFormat)).setTimeZone(TimeZone.getTimeZone(timeZone));
+//        // 设置格式化内容
+//        converter.setObjectMapper(objectMapper);
+//        converters.add(0, converter);
+//    }
 
 }

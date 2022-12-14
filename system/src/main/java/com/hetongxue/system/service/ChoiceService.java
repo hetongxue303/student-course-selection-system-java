@@ -10,4 +10,12 @@ import com.hetongxue.system.domain.Choice;
  */
 public interface ChoiceService extends IService<Choice> {
 
+    /**
+     * 学生选课处理
+     *
+     * @param type     类型(1选课 2退选)
+     * @param courseId 课程ID
+     */
+    int studentChoiceCourse(Integer type, Long courseId);
+
 }

@@ -11,10 +11,10 @@ import com.hetongxue.system.domain.vo.QueryVO;
 import com.hetongxue.system.mapper.MenuMapper;
 import com.hetongxue.system.mapper.RoleMenuMapper;
 import com.hetongxue.system.service.MenuService;
+import com.hetongxue.utils.MenuFilterUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import utils.MenuFilterUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -120,7 +120,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         List<RoleMenu> list = roleMenuMapper.selectList(new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, roleId));
         List<Long> menuIds = Optional.ofNullable(list).orElse(new ArrayList<>()).stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
         List<MenuTreeVO> result = new ArrayList<>();
-        
+
         if (menuIds.size() > 0) {
             LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
             wrapper.in(Menu::getMenuId, menuIds);

@@ -5,7 +5,7 @@ package com.hetongxue.handler.exception;
  *
  * @author 何同学
  */
-public class DatabaseDeleteException extends Exception {
+public class DatabaseDeleteException extends RuntimeException {
 
     public DatabaseDeleteException() {
     }

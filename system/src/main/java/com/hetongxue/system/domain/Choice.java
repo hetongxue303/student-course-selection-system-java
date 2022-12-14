@@ -19,7 +19,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("sys_selection")
+@TableName("sys_choice")
 public class Choice implements Serializable {
 
     /**
@@ -39,6 +39,14 @@ public class Choice implements Serializable {
      * 课程成绩
      */
     private BigDecimal score;
+    /**
+     * 是否退选
+     */
+    private Boolean isQuit;
+    /**
+     * 是否删除
+     */
+    private Boolean isDelete;
     /**
      * 是否结课
      */

@@ -5,7 +5,7 @@ package com.hetongxue.handler.exception;
  *
  * @author 何同学
  */
-public class DatabaseInsertException extends Exception {
+public class DatabaseInsertException extends RuntimeException {
 
     public DatabaseInsertException() {
     }

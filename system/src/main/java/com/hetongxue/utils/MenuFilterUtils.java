@@ -1,4 +1,4 @@
-package utils;
+package com.hetongxue.utils;
 
 import com.hetongxue.system.domain.Menu;
 import com.hetongxue.system.domain.bo.MenuBO;
