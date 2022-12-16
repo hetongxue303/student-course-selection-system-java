@@ -35,7 +35,7 @@ public class Menu implements Serializable {
      */
     private String menuTitle;
     /**
-     * 菜单类型
+     * 菜单类型 1菜单 2目录 3按钮
      */
     private Integer menuType;
     /**
@@ -62,6 +62,10 @@ public class Menu implements Serializable {
      * 权限标识
      */
     private String perKey;
+    /**
+     * 是否有子菜单(0:否 1:是)
+     */
+    private Boolean isSub;
     /**
      * 是否显示(0:否 1:是)
      */

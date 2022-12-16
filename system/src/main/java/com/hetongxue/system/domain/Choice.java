@@ -62,4 +62,16 @@ public class Choice implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
+
+    /**
+     * 用户名字
+     */
+    @TableField(exist = false)
+    private String username;
+    /**
+     * 课程名称
+     */
+    @TableField(exist = false)
+    private String courseName;
+
 }

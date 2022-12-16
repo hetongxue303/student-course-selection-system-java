@@ -7,10 +7,12 @@ import com.hetongxue.handler.exception.DatabaseUpdateException;
 import com.hetongxue.system.domain.Menu;
 import com.hetongxue.system.domain.Role;
 import com.hetongxue.system.domain.RoleMenu;
+import com.hetongxue.system.domain.UserRole;
 import com.hetongxue.system.domain.vo.QueryVO;
 import com.hetongxue.system.mapper.MenuMapper;
 import com.hetongxue.system.mapper.RoleMapper;
 import com.hetongxue.system.mapper.RoleMenuMapper;
+import com.hetongxue.system.mapper.UserRoleMapper;
 import com.hetongxue.system.service.RoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -37,12 +39,16 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Resource
     private RoleMenuMapper roleMenuMapper;
     @Resource
+    private UserRoleMapper userRoleMapper;
+    @Resource
     private MenuMapper menuMapper;
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
     public List<Role> selectRoleListByUserId(Long userId) {
-        return roleMapper.selectList(new LambdaQueryWrapper<Role>().inSql(Role::getRoleId, "select role_id from sys_user_role where user_id = " + userId));
+        LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(Role::getRoleId, this.selectRoleIdsByUserId(userId));
+        return roleMapper.selectList(wrapper);
     }
 
     @Override
@@ -113,6 +119,14 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             throw new DatabaseUpdateException("级别重复");
         }
         return roleMapper.updateById(role);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public List<Long> selectRoleIdsByUserId(Long userId) {
+        LambdaQueryWrapper<UserRole> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserRole::getUserId, userId);
+        return userRoleMapper.selectList(wrapper).stream().map(UserRole::getRoleId).collect(Collectors.toList());
     }
 
 }

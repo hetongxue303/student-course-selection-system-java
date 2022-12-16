@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hetongxue.base.constant.Base;
 import com.hetongxue.base.response.Result;
 import com.hetongxue.configuration.redis.RedisUtils;
-import com.hetongxue.configuration.security.entity.LoginInfo;
+import com.hetongxue.configuration.security.entity.UserDetail;
 import com.hetongxue.system.domain.User;
 import com.hetongxue.system.domain.vo.TokenVO;
+import com.hetongxue.system.service.UserService;
 import com.hetongxue.utils.JwtUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -45,15 +46,17 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private JwtUtils jwtUtils;
     @Resource
     private RedisUtils redisUtils;
+    @Resource
+    private UserService userService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        response.setContentType("application/json;charset=utf-8");
-        response.setStatus(HttpStatus.OK.value());
-        User user = ((LoginInfo) authentication.getPrincipal()).getUser();
+        User user = ((UserDetail) authentication.getPrincipal()).getUser();
         String token = jwtUtils.generateToken(user.getUserId(), user.getUsername());
         redisUtils.setValue(AUTHORIZATION, token, TIMEOUT, TIMEUNIT);
-        response.getWriter().println(new ObjectMapper().writeValueAsString(Result.Success(new TokenVO(token, Base.TOKEN_EXPIRATION_TIME)).setMessage("登陆成功")));
+        response.setStatus(HttpStatus.OK.value());
+        response.setContentType("application/json;charset=utf-8");
+        response.getWriter().println(new ObjectMapper().writeValueAsString(Result.Success(new TokenVO(token, Base.TOKEN_EXPIRATION_TIME, userService.getUserInfo(user))).setMessage("登陆成功")));
     }
 
 }

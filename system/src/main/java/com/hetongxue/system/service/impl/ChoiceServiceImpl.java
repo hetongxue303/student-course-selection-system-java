@@ -8,9 +8,11 @@ import com.hetongxue.handler.exception.DatabaseInsertException;
 import com.hetongxue.handler.exception.DatabaseUpdateException;
 import com.hetongxue.system.domain.Choice;
 import com.hetongxue.system.domain.Course;
+import com.hetongxue.system.domain.User;
 import com.hetongxue.system.domain.vo.QueryVO;
 import com.hetongxue.system.mapper.ChoiceMapper;
 import com.hetongxue.system.mapper.CourseMapper;
+import com.hetongxue.system.mapper.UserMapper;
 import com.hetongxue.system.service.ChoiceService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -36,6 +38,8 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
     private ChoiceMapper choiceMapper;
     @Resource
     private CourseMapper courseMapper;
+    @Resource
+    private UserMapper userMapper;
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -43,7 +47,13 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
         LambdaQueryWrapper<Choice> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Choice::getIsDelete, false);
         wrapper.orderByAsc(Choice::getChoiceId);
-        return choiceMapper.selectList(wrapper);
+        List<Choice> choices = new ArrayList<>();
+        Optional.ofNullable(choiceMapper.selectList(wrapper)).orElse(new ArrayList<>()).forEach(item -> {
+            User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId()));
+            Course course = courseMapper.selectOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseId, item.getCourseId()));
+            choices.add(item.setUsername(user.getRealName()).setCourseName(course.getCourseName()));
+        });
+        return choices;
     }
 
     @Override
@@ -54,7 +64,12 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
         wrapper.orderByAsc(Choice::getChoiceId);
         Page<Choice> page = choiceMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
 
-        List<Choice> choices = Optional.ofNullable(page.getRecords()).orElse(new ArrayList<>());
+        List<Choice> choices = new ArrayList<>();
+        Optional.ofNullable(page.getRecords()).orElse(new ArrayList<>()).forEach(item -> {
+            User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId()));
+            Course course = courseMapper.selectOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseId, item.getCourseId()));
+            choices.add(item.setUsername(user.getRealName()).setCourseName(course.getCourseName()));
+        });
 
         return new QueryVO(page.getCurrent(), page.getSize(), page.getTotal(), page.getPages(), choices);
     }

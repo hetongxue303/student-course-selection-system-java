@@ -1,5 +1,6 @@
-package com.hetongxue.system.domain.vo;
+package com.hetongxue.system.domain;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * 表现层对象：token
+ * 持久对象：用户角色信息
  *
  * @author 何同学
  */
@@ -16,19 +17,16 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class TokenVO implements Serializable {
+@TableName("sys_user_role")
+public class UserRole implements Serializable {
 
     /**
-     * token
+     * 用户ID
      */
-    private String token;
+    private Long userId;
     /**
-     * 过期时间
+     * 角色ID
      */
-    private long expireTime;
-    /**
-     * 用户信息
-     */
-    private UserVO user;
+    private Long roleId;
 
 }

@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 /**
- * 用户详情类
+ * 用户详情
  *
  * @author 何同学
  */
@@ -19,7 +19,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class LoginInfo implements UserDetails {
+public class UserDetail implements UserDetails {
 
     private User user;
     private Collection<GrantedAuthority> authorities;

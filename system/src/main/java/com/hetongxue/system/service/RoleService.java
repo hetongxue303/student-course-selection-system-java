@@ -70,4 +70,6 @@ public interface RoleService extends IService<Role> {
      */
     int updateRole(Role role);
 
+    List<Long> selectRoleIdsByUserId(Long userId);
+
 }

@@ -11,6 +11,7 @@ import com.hetongxue.system.domain.vo.QueryVO;
 import com.hetongxue.system.mapper.MenuMapper;
 import com.hetongxue.system.mapper.RoleMenuMapper;
 import com.hetongxue.system.service.MenuService;
+import com.hetongxue.system.service.RoleService;
 import com.hetongxue.utils.MenuFilterUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -35,13 +36,16 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Resource
     private MenuMapper menuMapper;
     @Resource
+    private RoleService roleService;
+    @Resource
     private RoleMenuMapper roleMenuMapper;
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
     public List<Menu> selectMenuListByUserId(Long userId) {
+        List<Long> collect = roleMenuMapper.selectList(new LambdaQueryWrapper<RoleMenu>().in(RoleMenu::getRoleId, roleService.selectRoleIdsByUserId(userId))).stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
         LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
-        wrapper.inSql(Menu::getMenuId, "select menu_id from sys_role_menu where role_id in (select role_id from sys_user_role where user_id = " + userId + ")");
+        wrapper.in(Menu::getMenuId, collect);
         wrapper.orderByAsc(Menu::getSort);
         return menuMapper.selectList(wrapper);
     }

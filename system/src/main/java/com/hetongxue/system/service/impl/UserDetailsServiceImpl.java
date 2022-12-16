@@ -1,6 +1,6 @@
 package com.hetongxue.system.service.impl;
 
-import com.hetongxue.configuration.security.entity.LoginInfo;
+import com.hetongxue.configuration.security.entity.UserDetail;
 import com.hetongxue.configuration.security.utils.SecurityUtils;
 import com.hetongxue.system.domain.Menu;
 import com.hetongxue.system.domain.Role;
@@ -51,7 +51,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 生成权限列表
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(SecurityUtils.generateAuthority(roleList, menuList));
 
-        return new LoginInfo(user, authorities);
+        return new UserDetail(user, authorities);
     }
 
 }

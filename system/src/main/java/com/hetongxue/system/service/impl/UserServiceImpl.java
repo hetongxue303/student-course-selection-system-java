@@ -1,12 +1,21 @@
 package com.hetongxue.system.service.impl;
 
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hetongxue.configuration.security.utils.SecurityUtils;
+import com.hetongxue.system.domain.Menu;
+import com.hetongxue.system.domain.Role;
 import com.hetongxue.system.domain.User;
 import com.hetongxue.system.domain.bo.UserBO;
+import com.hetongxue.system.domain.vo.MenuVO;
 import com.hetongxue.system.domain.vo.QueryVO;
+import com.hetongxue.system.domain.vo.RouterVO;
+import com.hetongxue.system.domain.vo.UserVO;
 import com.hetongxue.system.mapper.UserMapper;
+import com.hetongxue.system.service.MenuService;
+import com.hetongxue.system.service.RoleService;
 import com.hetongxue.system.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,10 +24,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 用户业务实现
@@ -31,6 +37,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private RoleService roleService;
+    @Resource
+    private MenuService menuService;
     @Resource
     private PasswordEncoder passwordEncoder;
 
@@ -126,6 +136,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional(rollbackFor = Exception.class)
     public int updateUser(User user) {
         return userMapper.updateById(user);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public UserVO getUserInfo(User user) {
+        // 获取角色列表
+        List<Role> roleList = roleService.selectRoleListByUserId(user.getUserId());
+        System.out.println("roleList = " + roleList);
+        // 生成角色数组
+        String[] roles = SecurityUtils.generateRoleToArray(roleList);
+        System.out.println("roles = " + Arrays.toString(roles));
+        // 获取菜单列表
+        List<Menu> menuList = menuService.selectMenuListByUserId(user.getUserId());
+        // 生成菜单列表
+        List<MenuVO> menus = SecurityUtils.generateMenu(menuList, 0L);
+        // 生成路由列表
+        List<RouterVO> routers = SecurityUtils.generateRouter(menuList, 0L);
+        // 生成权限数组
+        String[] permissions = SecurityUtils.generatePermissionToArray(menuList);
+
+        return new UserVO(user.getUsername(), user.getAvatar(), roles, user.getIsAdmin(), permissions, menus, routers);
     }
 
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hetongxue.system.domain.User;
 import com.hetongxue.system.domain.bo.UserBO;
 import com.hetongxue.system.domain.vo.QueryVO;
+import com.hetongxue.system.domain.vo.UserVO;
 
 import java.util.List;
 
@@ -78,4 +79,10 @@ public interface UserService extends IService<User> {
      */
     int updateUser(User user);
 
+    /**
+     * 获取用户信息
+     *
+     * @param user 当前用户
+     */
+    UserVO getUserInfo(User user);
 }
