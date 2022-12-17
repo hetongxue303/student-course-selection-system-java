@@ -32,9 +32,19 @@ public class Choice implements Serializable {
      */
     private Long userId;
     /**
+     * 用户名字
+     */
+    @TableField(exist = false)
+    private String readName;
+    /**
      * 课程ID
      */
     private Long courseId;
+    /**
+     * 课程名称
+     */
+    @TableField(exist = false)
+    private String courseName;
     /**
      * 课程成绩
      */
@@ -47,6 +57,10 @@ public class Choice implements Serializable {
      * 是否删除
      */
     private Boolean isDelete;
+    /**
+     * 是否同意
+     */
+    private Integer status;
     /**
      * 是否结课
      */
@@ -61,17 +75,5 @@ public class Choice implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-
-
-    /**
-     * 用户名字
-     */
-    @TableField(exist = false)
-    private String username;
-    /**
-     * 课程名称
-     */
-    @TableField(exist = false)
-    private String courseName;
 
 }

@@ -15,7 +15,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -50,7 +49,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private UserService userService;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         User user = ((UserDetail) authentication.getPrincipal()).getUser();
         String token = jwtUtils.generateToken(user.getUserId(), user.getUsername());
         redisUtils.setValue(AUTHORIZATION, token, TIMEOUT, TIMEUNIT);

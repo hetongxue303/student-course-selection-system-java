@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * 选课业务实现
@@ -51,7 +52,7 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
         Optional.ofNullable(choiceMapper.selectList(wrapper)).orElse(new ArrayList<>()).forEach(item -> {
             User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId()));
             Course course = courseMapper.selectOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseId, item.getCourseId()));
-            choices.add(item.setUsername(user.getRealName()).setCourseName(course.getCourseName()));
+            choices.add(item.setReadName(user.getRealName()).setCourseName(course.getCourseName()));
         });
         return choices;
     }
@@ -59,16 +60,47 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
     public QueryVO getChoicePage(Integer currentPage, Integer pageSize, Choice query) {
+        User user = SecurityUtils.getUser();
         LambdaQueryWrapper<Choice> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Choice::getIsDelete, false);
         wrapper.orderByAsc(Choice::getChoiceId);
+
+        if (!user.getIsAdmin()) {
+            List<Long> courseIds = courseMapper.selectList(new LambdaQueryWrapper<Course>().eq(Course::getUserId, user.getUserId())).stream().map(Course::getCourseId).collect(Collectors.toList());
+            if (courseIds.size() > 0) {
+                wrapper.in(Choice::getCourseId, courseIds);
+            }
+        }
+
+        if (Objects.nonNull(query.getReadName())) {
+            List<Long> userIds = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getRealName, query.getReadName())).stream().map(User::getUserId).collect(Collectors.toList());
+            if (userIds.size() > 0) {
+                wrapper.in(Choice::getUserId, userIds);
+            }
+        }
+
+        if (Objects.nonNull(query.getCourseName())) {
+            List<Long> courseIds = courseMapper.selectList(new LambdaQueryWrapper<Course>().like(Course::getCourseName, query.getCourseName())).stream().map(Course::getCourseId).collect(Collectors.toList());
+            if (courseIds.size() > 0) {
+                wrapper.in(Choice::getCourseId, courseIds);
+            }
+        }
+
+        if (Objects.nonNull(query.getStatus())) {
+            if (query.getStatus() != -1) {
+                wrapper.eq(Choice::getStatus, query.getStatus());
+            }
+        } else {
+            wrapper.eq(Choice::getStatus, 0);
+        }
+
         Page<Choice> page = choiceMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
 
         List<Choice> choices = new ArrayList<>();
         Optional.ofNullable(page.getRecords()).orElse(new ArrayList<>()).forEach(item -> {
-            User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId()));
+            User userinfo = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId()));
             Course course = courseMapper.selectOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseId, item.getCourseId()));
-            choices.add(item.setUsername(user.getRealName()).setCourseName(course.getCourseName()));
+            choices.add(item.setReadName(userinfo.getRealName()).setCourseName(course.getCourseName()));
         });
 
         return new QueryVO(page.getCurrent(), page.getSize(), page.getTotal(), page.getPages(), choices);

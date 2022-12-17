@@ -40,9 +40,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (Objects.isNull(user)) {
             throw new UsernameNotFoundException("用户名或密码错误");
         }
-        if (user.getIsDelete()) {
-            throw new UsernameNotFoundException("用户不存在");
-        }
 
         // 查询角色列表
         List<Role> roleList = roleService.selectRoleListByUserId(user.getUserId());
@@ -50,7 +47,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<Menu> menuList = menuService.selectMenuListByUserId(user.getUserId());
         // 生成权限列表
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(SecurityUtils.generateAuthority(roleList, menuList));
-
+        
         return new UserDetail(user, authorities);
     }
 

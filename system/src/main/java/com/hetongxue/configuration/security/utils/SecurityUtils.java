@@ -25,15 +25,15 @@ public class SecurityUtils {
     /**
      * 目录key
      */
-    private static final int LIST_KEY = 0;
+    private static final int LIST_KEY = 1;
     /**
      * 菜单项key
      */
-    private static final int MENUITEM_KEY = 1;
+    private static final int MENUITEM_KEY = 2;
     /**
      * 按钮key
      */
-    private static final int BUTTON_KEY = 2;
+    private static final int BUTTON_KEY = 3;
 
     /**
      * 生成菜单列表
@@ -44,22 +44,12 @@ public class SecurityUtils {
      */
     public static List<MenuVO> generateMenu(List<Menu> menuList, Long parentId) {
         List<MenuVO> menus = new ArrayList<>();
-        // 判断是否为空
-        Optional.ofNullable(menuList)
-                // 不为空时创建新的数组
-                .orElse(new ArrayList<>())
-                // 转换流
-                .stream()
+        Optional.ofNullable(menuList).orElse(new ArrayList<>()).stream()
                 // 过滤:不为空 类型不是按钮 等于父ID
-                .filter(item -> item != null && item.getMenuType() != BUTTON_KEY && Objects.equals(item.getParentId(), parentId))
+                .filter(item -> Objects.nonNull(item) && item.getMenuType() != BUTTON_KEY && Objects.equals(item.getParentId(), parentId))
                 // 循环遍历
                 .forEach(item -> {
-                    // 如果你的菜单标题为空 则只需要拿它对应的子菜单
-                    if (Objects.isNull(item.getMenuTitle())) {
-                        generateMenu(menuList, item.getMenuId()).stream().filter(Objects::nonNull).forEach(menus::add);
-                    } else {
-                        menus.add(new MenuVO().setName(item.getMenuTitle()).setPath(item.getPath()).setIcon(item.getIcon()).setChildren(generateMenu(menuList, item.getMenuId())));
-                    }
+                    menus.add(new MenuVO().setName(item.getMenuTitle()).setPath(item.getPath()).setIcon(item.getIcon()).setChildren(generateMenu(menuList, item.getMenuId())));
                 });
         return menus;
     }
@@ -73,14 +63,9 @@ public class SecurityUtils {
      */
     public static List<RouterVO> generateRouter(List<Menu> menuList, Long parentId) {
         List<RouterVO> routers = new ArrayList<>();
-        // 判断是否为空
-        Optional.ofNullable(menuList)
-                // 不为空时创建新的数组
-                .orElse(new ArrayList<>())
-                // 转成流
-                .stream()
-                // 过滤 不为空 和 对应父ID 的数据 以及类型不为 按钮 的
-                .filter(item -> item != null && Objects.equals(item.getParentId(), parentId) && item.getMenuType() != BUTTON_KEY)
+        Optional.ofNullable(menuList).orElse(new ArrayList<>()).stream()
+                // 过滤:不为空 类型不是按钮 等于父ID
+                .filter(item -> Objects.nonNull(item) && item.getMenuType() != BUTTON_KEY && Objects.equals(item.getParentId(), parentId))
                 // 遍历循环
                 .forEach(item -> routers.add(new RouterVO().setName(item.getMenuName()).setPath(item.getPath()).setComponent(item.getComponent()).setMeta(new RouterVO.MetaVo().setTitle(item.getMenuTitle()).setIcon(item.getIcon()).setCache(item.getIsCache()).setShow(item.getIsDisplay())
                         // 当类型是目录时 不存在权限代码

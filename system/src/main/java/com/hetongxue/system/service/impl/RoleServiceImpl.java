@@ -47,7 +47,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Transactional(propagation = Propagation.SUPPORTS)
     public List<Role> selectRoleListByUserId(Long userId) {
         LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
-        wrapper.in(Role::getRoleId, this.selectRoleIdsByUserId(userId));
+        wrapper.in(Role::getRoleId, selectRoleIdListByUserId(userId));
         return roleMapper.selectList(wrapper);
     }
 
@@ -123,7 +123,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
-    public List<Long> selectRoleIdsByUserId(Long userId) {
+    public List<Long> selectRoleIdListByUserId(Long userId) {
         LambdaQueryWrapper<UserRole> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserRole::getUserId, userId);
         return userRoleMapper.selectList(wrapper).stream().map(UserRole::getRoleId).collect(Collectors.toList());

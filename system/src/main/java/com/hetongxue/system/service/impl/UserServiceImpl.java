@@ -24,7 +24,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 用户业务实现
@@ -50,6 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User selectOneByUsername(String username) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUsername, username);
+        wrapper.eq(User::getIsDelete, false);
         return userMapper.selectOne(wrapper);
     }
 
@@ -143,10 +147,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public UserVO getUserInfo(User user) {
         // 获取角色列表
         List<Role> roleList = roleService.selectRoleListByUserId(user.getUserId());
-        System.out.println("roleList = " + roleList);
         // 生成角色数组
         String[] roles = SecurityUtils.generateRoleToArray(roleList);
-        System.out.println("roles = " + Arrays.toString(roles));
         // 获取菜单列表
         List<Menu> menuList = menuService.selectMenuListByUserId(user.getUserId());
         // 生成菜单列表

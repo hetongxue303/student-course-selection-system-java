@@ -43,9 +43,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
     public List<Menu> selectMenuListByUserId(Long userId) {
-        List<Long> collect = roleMenuMapper.selectList(new LambdaQueryWrapper<RoleMenu>().in(RoleMenu::getRoleId, roleService.selectRoleIdsByUserId(userId))).stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
         LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
-        wrapper.in(Menu::getMenuId, collect);
+        wrapper.in(Menu::getMenuId, selectMenuIdListByUserId(userId));
         wrapper.orderByAsc(Menu::getSort);
         return menuMapper.selectList(wrapper);
     }
@@ -136,6 +135,14 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         }
 
         return result;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public List<Long> selectMenuIdListByUserId(Long userId) {
+        LambdaQueryWrapper<RoleMenu> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(RoleMenu::getRoleId, roleService.selectRoleIdListByUserId(userId));
+        return roleMenuMapper.selectList(wrapper).stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
     }
 
 }

@@ -3,12 +3,14 @@ package com.hetongxue.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hetongxue.configuration.security.utils.SecurityUtils;
 import com.hetongxue.system.domain.Course;
+import com.hetongxue.system.domain.User;
 import com.hetongxue.system.domain.bo.CourseBO;
 import com.hetongxue.system.domain.vo.QueryVO;
 import com.hetongxue.system.mapper.CourseMapper;
-import com.hetongxue.system.mapper.UserMapper;
 import com.hetongxue.system.service.CourseService;
+import com.hetongxue.system.service.RoleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -32,7 +34,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Resource
     private CourseMapper courseMapper;
     @Resource
-    private UserMapper userMapper;
+    private RoleService roleService;
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -45,12 +47,20 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
     public QueryVO getCoursePage(Integer currentPage, Integer pageSize, Course query) {
+        User user = SecurityUtils.getUser();
         LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Course::getIsDelete, false);
+        wrapper.orderByAsc(Course::getCourseId);
         if (Objects.nonNull(query.getCourseName())) {
             wrapper.like(Course::getCourseName, query.getCourseName());
         }
-        wrapper.eq(Course::getIsDelete, false);
-        wrapper.orderByAsc(Course::getCourseId);
+
+        if (!user.getIsAdmin()) {
+            if (user.getType() == 2) {
+                wrapper.eq(Course::getUserId, user.getUserId());
+            }
+        }
+
         Page<Course> list = courseMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
 
         List<CourseBO> courseBO = new ArrayList<>();
@@ -60,13 +70,17 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             courseBO.add(bo);
         });
 
-        return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), courseBO);
+        return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), list.getRecords());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int addCourse(Course course) {
-        return courseMapper.insert(course);
+        User user = SecurityUtils.getUser();
+        if (user.getIsAdmin()) {
+            return courseMapper.insert(course);
+        }
+        return courseMapper.insert(course.setUserId(user.getUserId()));
     }
 
     @Override

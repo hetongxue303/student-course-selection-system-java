@@ -89,4 +89,6 @@ public interface MenuService extends IService<Menu> {
      */
     List<MenuTreeVO> getMenuListByRoleId(Long roleId);
 
+    List<Long> selectMenuIdListByUserId(Long userId);
+
 }
