@@ -47,7 +47,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<Menu> menuList = menuService.selectMenuListByUserId(user.getUserId());
         // 生成权限列表
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(SecurityUtils.generateAuthority(roleList, menuList));
-        
+
         return new UserDetail(user, authorities);
     }
 

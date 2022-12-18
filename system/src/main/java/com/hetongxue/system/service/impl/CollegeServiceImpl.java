@@ -50,7 +50,7 @@ public class CollegeServiceImpl extends ServiceImpl<CollegeMapper, College> impl
         Page<College> list = collegeMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
 
         List<College> colleges = Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>());
-        
+
         return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), colleges);
     }
 

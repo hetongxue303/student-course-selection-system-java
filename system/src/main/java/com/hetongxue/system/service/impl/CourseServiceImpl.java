@@ -4,14 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hetongxue.configuration.security.utils.SecurityUtils;
+import com.hetongxue.system.domain.Choice;
 import com.hetongxue.system.domain.Course;
 import com.hetongxue.system.domain.User;
-import com.hetongxue.system.domain.bo.CourseBO;
 import com.hetongxue.system.domain.vo.QueryVO;
+import com.hetongxue.system.mapper.ChoiceMapper;
 import com.hetongxue.system.mapper.CourseMapper;
 import com.hetongxue.system.service.CourseService;
-import com.hetongxue.system.service.RoleService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 课程业务实现
@@ -34,7 +34,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Resource
     private CourseMapper courseMapper;
     @Resource
-    private RoleService roleService;
+    private ChoiceMapper choiceMapper;
+
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -63,14 +64,25 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
         Page<Course> list = courseMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
 
-        List<CourseBO> courseBO = new ArrayList<>();
+        List<Course> courses = new ArrayList<>();
+        List<Long> courseIds = new ArrayList<>();
+        List<Long> confirmCourseIds = new ArrayList<>();
+        // 查出该学生的所有选课记录
+        if (user.getType() == 3) {
+            List<Choice> choices = choiceMapper.selectList(new LambdaQueryWrapper<Choice>().eq(Choice::getUserId, user.getUserId()));
+            courseIds = Optional.ofNullable(choices).orElse(new ArrayList<>()).stream().filter(item -> Objects.nonNull(item) && Objects.equals(item.getIsDelete(), false)).map(Choice::getCourseId).collect(Collectors.toList());
+            List<Course> courseList = courseMapper.selectList(new LambdaQueryWrapper<Course>().in(Course::getCourseId, courseIds));
+            if (courseList.size() > 0) {
+                confirmCourseIds = courseList.stream().filter(item -> Objects.nonNull(item) && Objects.equals(item.getIsConfirm(), true)).map(Course::getCourseId).collect(Collectors.toList());
+            }
+        }
+        List<Long> finalCourseIds = courseIds;
+        List<Long> finalConfirmCourseIds = confirmCourseIds;
         Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>()).forEach(course -> {
-            CourseBO bo = new CourseBO();
-            BeanUtils.copyProperties(course, bo);
-            courseBO.add(bo);
+            courses.add(course.setIsChoice(finalCourseIds.contains(course.getCourseId())).setIsConfirm(finalConfirmCourseIds.contains(course.getCourseId())));
         });
 
-        return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), list.getRecords());
+        return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), courses);
     }
 
     @Override

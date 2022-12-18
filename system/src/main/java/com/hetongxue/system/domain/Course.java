@@ -61,4 +61,15 @@ public class Course implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
+    /**
+     * 是否已选
+     */
+    @TableField(exist = false)
+    private Boolean isChoice;
+    /**
+     * 是否同意
+     */
+    @TableField(exist = false)
+    private Boolean isConfirm;
+
 }
