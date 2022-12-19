@@ -4,6 +4,8 @@ import com.hetongxue.base.constant.Base;
 import com.hetongxue.configuration.redis.RedisUtils;
 import com.hetongxue.configuration.security.exception.JwtAuthenticationException;
 import com.hetongxue.configuration.security.utils.SecurityUtils;
+import com.hetongxue.system.domain.Menu;
+import com.hetongxue.system.domain.Role;
 import com.hetongxue.system.domain.User;
 import com.hetongxue.system.service.MenuService;
 import com.hetongxue.system.service.RoleService;
@@ -72,7 +74,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throw new JwtAuthenticationException("凭证不合法");
         }
         // 获取权限列表
-        List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(SecurityUtils.generateAuthority(roleService.selectRoleListByUserId(user.getUserId()), menuService.selectMenuListByUserId(user.getUserId())));
+        List<Role> roleList = roleService.selectRoleListByUserId(user.getUserId());
+        List<Menu> menuList = menuService.selectMenuListByUserId(user.getUserId());
+        List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(SecurityUtils.generateAuthority(roleList, menuList));
         // 封装Authentication
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, authorities);
         // 存入SecurityContextHolder

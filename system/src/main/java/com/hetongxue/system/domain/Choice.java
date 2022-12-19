@@ -75,6 +75,6 @@ public class Choice implements Serializable {
      * 用户名字
      */
     @TableField(exist = false)
-    private String readName;
+    private String realName;
 
 }
