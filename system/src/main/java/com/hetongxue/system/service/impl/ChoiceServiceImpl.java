@@ -77,37 +77,39 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
                 wrapper.eq(Choice::getUserId, user.getUserId());
             }
         }
-//
-//        // 查询相关
-//        if (Objects.nonNull(query.getReadName())) {
-//            List<Long> userIds = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getRealName, query.getReadName())).stream().map(User::getUserId).collect(Collectors.toList());
-//            if (userIds.size() > 0) {
-//                wrapper.in(Choice::getUserId, userIds);
-//            }
-//        }
-//
-//        if (Objects.nonNull(query.getCourseName())) {
-//            List<Long> courseIds = courseMapper.selectList(new LambdaQueryWrapper<Course>().like(Course::getCourseName, query.getCourseName())).stream().map(Course::getCourseId).collect(Collectors.toList());
-//            if (courseIds.size() > 0) {
-//                wrapper.in(Choice::getCourseId, courseIds);
-//            }
-//        }
-//
-//        if (Objects.nonNull(query.getStatus())) {
-//            if (query.getStatus() != -1) {
-//                wrapper.eq(Choice::getStatus, query.getStatus());
-//            }
-//        } else {
-//            wrapper.eq(Choice::getStatus, 0);
-//        }
+
+        // 查询相关
+        if (Objects.nonNull(query.getRealName())) {
+            List<Long> userIds = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getRealName, query.getRealName())).stream().map(User::getUserId).collect(Collectors.toList());
+            if (userIds.size() > 0) {
+                wrapper.in(Choice::getUserId, userIds);
+            }
+        }
+
+        if (Objects.nonNull(query.getCourseName())) {
+            List<Long> courseIds = courseMapper.selectList(new LambdaQueryWrapper<Course>().like(Course::getCourseName, query.getCourseName())).stream().map(Course::getCourseId).collect(Collectors.toList());
+            if (courseIds.size() > 0) {
+                wrapper.in(Choice::getCourseId, courseIds);
+            }
+        }
+
+        if (Objects.nonNull(query.getStatus())) {
+            if (query.getStatus() != -1) {
+                wrapper.eq(Choice::getStatus, query.getStatus());
+            }
+        } else {
+            wrapper.eq(Choice::getStatus, 0);
+        }
 
         Page<Choice> page = choiceMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
 
         List<Choice> choices = new ArrayList<>();
         Optional.ofNullable(page.getRecords()).orElse(new ArrayList<>()).forEach(item -> {
-            User userinfo = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId()));
             Course course = courseMapper.selectOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseId, item.getCourseId()));
-            choices.add(item.setRealName(userinfo.getRealName()).setCourseName(course.getCourseName()));
+            String teacherName = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, course.getUserId())).getRealName();
+            String studentName = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId())).getRealName();
+            String courseName = course.getCourseName();
+            choices.add(item.setTeacherName(teacherName).setRealName(studentName).setCourseName(courseName));
         });
 
         return new QueryVO(page.getCurrent(), page.getSize(), page.getTotal(), page.getPages(), choices);

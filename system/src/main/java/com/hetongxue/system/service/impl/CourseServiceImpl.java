@@ -10,6 +10,7 @@ import com.hetongxue.system.domain.User;
 import com.hetongxue.system.domain.vo.QueryVO;
 import com.hetongxue.system.mapper.ChoiceMapper;
 import com.hetongxue.system.mapper.CourseMapper;
+import com.hetongxue.system.mapper.UserMapper;
 import com.hetongxue.system.service.CourseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -35,6 +36,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     private CourseMapper courseMapper;
     @Resource
     private ChoiceMapper choiceMapper;
+    @Resource
+    private UserMapper userMapper;
 
 
     @Override
@@ -70,16 +73,18 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         // 查出该学生的所有选课记录
         if (user.getType() == 3) {
             List<Choice> choices = choiceMapper.selectList(new LambdaQueryWrapper<Choice>().eq(Choice::getUserId, user.getUserId()));
-            courseIds = Optional.ofNullable(choices).orElse(new ArrayList<>()).stream().filter(item -> Objects.nonNull(item) && Objects.equals(item.getIsDelete(), false)).map(Choice::getCourseId).collect(Collectors.toList());
-            List<Course> courseList = courseMapper.selectList(new LambdaQueryWrapper<Course>().in(Course::getCourseId, courseIds));
-            if (courseList.size() > 0) {
-                confirmCourseIds = courseList.stream().filter(item -> Objects.nonNull(item) && Objects.equals(item.getIsConfirm(), true)).map(Course::getCourseId).collect(Collectors.toList());
+            courseIds = Optional.of(choices).orElse(new ArrayList<>()).stream().filter(item -> Objects.nonNull(item) && Objects.equals(item.getIsDelete(), false)).map(Choice::getCourseId).collect(Collectors.toList());
+            if (courseIds.size() > 0) {
+                List<Course> courseList = courseMapper.selectList(new LambdaQueryWrapper<Course>().in(Course::getCourseId, courseIds));
+                if (courseList.size() > 0) {
+                    confirmCourseIds = courseList.stream().filter(item -> Objects.nonNull(item) && Objects.equals(item.getIsConfirm(), true)).map(Course::getCourseId).collect(Collectors.toList());
+                }
             }
         }
         List<Long> finalCourseIds = courseIds;
         List<Long> finalConfirmCourseIds = confirmCourseIds;
         Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>()).forEach(course -> {
-            courses.add(course.setIsChoice(finalCourseIds.contains(course.getCourseId())).setIsConfirm(finalConfirmCourseIds.contains(course.getCourseId())));
+            courses.add(course.setTeacherName(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, course.getUserId())).getRealName()).setIsChoice(finalCourseIds.contains(course.getCourseId())).setIsConfirm(finalConfirmCourseIds.contains(course.getCourseId())));
         });
 
         return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), courses);

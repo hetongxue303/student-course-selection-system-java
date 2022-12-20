@@ -71,5 +71,10 @@ public class Course implements Serializable {
      */
     @TableField(exist = false)
     private Boolean isConfirm;
+    /**
+     * 任课老师
+     */
+    @TableField(exist = false)
+    private String teacherName;
 
 }

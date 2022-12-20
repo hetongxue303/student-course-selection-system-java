@@ -76,5 +76,10 @@ public class Choice implements Serializable {
      */
     @TableField(exist = false)
     private String realName;
+    /**
+     * 任课教师
+     */
+    @TableField(exist = false)
+    private String teacherName;
 
 }
