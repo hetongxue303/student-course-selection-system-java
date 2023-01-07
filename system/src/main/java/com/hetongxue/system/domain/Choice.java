@@ -1,6 +1,7 @@
 package com.hetongxue.system.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.hetongxue.system.domain.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,9 +33,19 @@ public class Choice implements Serializable {
      */
     private Long userId;
     /**
+     * 用户信息
+     */
+    @TableField(exist = false)
+    private UserDto user;
+    /**
      * 课程ID
      */
     private Long courseId;
+    /**
+     * 课程信息
+     */
+    @TableField(exist = false)
+    private Course course;
     /**
      * 课程成绩
      */

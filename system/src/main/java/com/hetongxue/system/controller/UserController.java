@@ -106,4 +106,10 @@ public class UserController {
         return userService.updateUser(user) > 0 ? Result.Success().setMessage("update success") : Result.Error().setMessage("update fail");
     }
 
+    @GetMapping("/center")
+    @LogAnnotation(operate = "个人中心")
+    public Result center(String username) {
+        return Result.Success(userService.selectOneByUsername(username));
+    }
+
 }

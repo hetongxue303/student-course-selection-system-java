@@ -33,6 +33,12 @@ public class CourseController {
         return Result.Success(courseService.getCoursePage(currentPage, pageSize, query)).setMessage("query pagination list success");
     }
 
+    @GetMapping("/get/my/page")
+    @LogAnnotation(operate = "分页获取课程列表")
+    public Result getMyCoursePage(Integer currentPage, Integer pageSize, Course query) {
+        return Result.Success(courseService.getMyCoursePage(currentPage, pageSize, query)).setMessage("query pagination list success");
+    }
+
 
     @PostMapping("/insert")
     @LogAnnotation(operate = "新增课程")

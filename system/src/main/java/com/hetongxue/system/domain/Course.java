@@ -31,6 +31,11 @@ public class Course implements Serializable {
      */
     private Long userId;
     /**
+     * 用户信息
+     */
+    @TableField(exist = false)
+    private User user;
+    /**
      * 课程名称
      */
     private String courseName;

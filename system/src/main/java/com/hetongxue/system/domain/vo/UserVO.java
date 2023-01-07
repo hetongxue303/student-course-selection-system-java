@@ -1,5 +1,6 @@
 package com.hetongxue.system.domain.vo;
 
+import com.hetongxue.system.domain.Menu;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,6 +40,10 @@ public class UserVO implements Serializable {
      * 权限列表
      */
     private String[] permissions;
+    /**
+     * 菜单列表
+     */
+    private List<Menu> menu;
     /**
      * 菜单列表
      */

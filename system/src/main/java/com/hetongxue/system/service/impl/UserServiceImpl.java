@@ -158,7 +158,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 生成权限数组
         String[] permissions = SecurityUtils.generatePermissionToArray(menuList);
 
-        return new UserVO(user.getUsername(), user.getAvatar(), roles, user.getIsAdmin(), permissions, menus, routers);
+        return new UserVO(user.getUsername(), user.getAvatar(), roles, user.getIsAdmin(), permissions, menuList, menus, routers);
     }
 
 }

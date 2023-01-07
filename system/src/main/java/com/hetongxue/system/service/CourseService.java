@@ -30,6 +30,8 @@ public interface CourseService extends IService<Course> {
      */
     QueryVO getCoursePage(Integer currentPage, Integer pageSize, Course query);
 
+    QueryVO getMyCoursePage(Integer currentPage, Integer pageSize, Course query);
+
 
     /**
      * 添加课程

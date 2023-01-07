@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hetongxue.configuration.security.utils.SecurityUtils;
 import com.hetongxue.handler.exception.DatabaseInsertException;
-import com.hetongxue.handler.exception.DatabaseUpdateException;
 import com.hetongxue.system.domain.Choice;
 import com.hetongxue.system.domain.Course;
 import com.hetongxue.system.domain.User;
@@ -81,24 +80,18 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
         // 查询相关
         if (Objects.nonNull(query.getRealName())) {
             List<Long> userIds = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getRealName, query.getRealName())).stream().map(User::getUserId).collect(Collectors.toList());
-            if (userIds.size() > 0) {
-                wrapper.in(Choice::getUserId, userIds);
-            }
+            wrapper.in(userIds.size() > 0, Choice::getUserId, userIds);
         }
 
         if (Objects.nonNull(query.getCourseName())) {
             List<Long> courseIds = courseMapper.selectList(new LambdaQueryWrapper<Course>().like(Course::getCourseName, query.getCourseName())).stream().map(Course::getCourseId).collect(Collectors.toList());
-            if (courseIds.size() > 0) {
-                wrapper.in(Choice::getCourseId, courseIds);
-            }
+            wrapper.in(courseIds.size() > 0, Choice::getCourseId, courseIds);
         }
 
         if (Objects.nonNull(query.getStatus())) {
             if (query.getStatus() != -1) {
                 wrapper.eq(Choice::getStatus, query.getStatus());
             }
-        } else {
-            wrapper.eq(Choice::getStatus, 0);
         }
 
         Page<Choice> page = choiceMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
@@ -146,32 +139,32 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int studentChoiceCourse(Integer type, Long courseId) {
-        try {
-            Course course = courseMapper.selectOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseId, courseId));
-            Long userId = SecurityUtils.getUser().getUserId();
-            switch (type) {
-                case 1:
-                    if (Objects.equals(course.getCount(), course.getChoice())) {
-                        throw new DatabaseInsertException("课程已满");
-                    }
-                    courseMapper.updateById(new Course().setCourseId(courseId).setChoice(course.getChoice() + 1));
-                    choiceMapper.insert(new Choice().setUserId(userId).setCourseId(courseId));
-                    break;
-                case 2:
-                    courseMapper.updateById(new Course().setCourseId(courseId).setChoice(course.getChoice() - 1));
-                    LambdaQueryWrapper<Choice> wrapper = new LambdaQueryWrapper<>();
-                    wrapper.eq(Choice::getCourseId, courseId);
-                    wrapper.eq(Choice::getUserId, userId);
-                    Choice choice = choiceMapper.selectOne(wrapper);
-                    System.out.println("choice = " + choice);
-                    choiceMapper.updateById(choice.setIsQuit(true));
-                    break;
-            }
-            return 1;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new DatabaseUpdateException("更新失败");
+        Course course = courseMapper.selectOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseId, courseId));
+        Long userId = SecurityUtils.getUser().getUserId();
+        switch (type) {
+            case 1:
+                Choice myChoice = choiceMapper.selectOne(new LambdaQueryWrapper<Choice>().eq(Choice::getCourseId, courseId).eq(Choice::getUserId, userId).eq(Choice::getIsQuit, false));
+                if (Objects.nonNull(myChoice)) {
+                    throw new DatabaseInsertException("你已选择该课程，不可重复选择！");
+                }
+                if (Objects.equals(course.getCount(), course.getChoice())) {
+                    throw new DatabaseInsertException("课程已满");
+                }
+
+                courseMapper.updateById(new Course().setCourseId(courseId).setChoice(course.getChoice() + 1));
+                choiceMapper.insert(new Choice().setUserId(userId).setCourseId(courseId));
+                break;
+            case 2:
+                courseMapper.updateById(new Course().setCourseId(courseId).setChoice(course.getChoice() - 1));
+                LambdaQueryWrapper<Choice> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(Choice::getCourseId, courseId);
+                wrapper.eq(Choice::getUserId, userId);
+                wrapper.eq(Choice::getIsQuit, false);
+                Choice choice = choiceMapper.selectOne(wrapper);
+                choiceMapper.updateById(choice.setIsQuit(true));
+                break;
         }
+        return 1;
     }
 
 }
