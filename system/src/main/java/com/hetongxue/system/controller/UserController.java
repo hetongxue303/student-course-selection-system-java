@@ -4,6 +4,7 @@ import com.hetongxue.aop.annotation.LogAnnotation;
 import com.hetongxue.base.response.Result;
 import com.hetongxue.configuration.security.utils.SecurityUtils;
 import com.hetongxue.system.domain.User;
+import com.hetongxue.system.domain.vo.UpdatePasswordVO;
 import com.hetongxue.system.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -104,6 +105,12 @@ public class UserController {
     @LogAnnotation(operate = "更新用户")
     public Result updateUser(@RequestBody User user) {
         return userService.updateUser(user) > 0 ? Result.Success().setMessage("update success") : Result.Error().setMessage("update fail");
+    }
+
+    @PutMapping("/update/password")
+    @LogAnnotation(operate = "修改密码")
+    public Result updateUserPassword(@RequestBody UpdatePasswordVO updatePasswordVO) {
+        return userService.updateUserPassword(updatePasswordVO) > 0 ? Result.Success().setMessage("update password success") : Result.Error().setMessage("update password fail");
     }
 
     @GetMapping("/center")

@@ -5,14 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hetongxue.configuration.security.utils.SecurityUtils;
+import com.hetongxue.handler.exception.DatabaseUpdateException;
 import com.hetongxue.system.domain.Menu;
 import com.hetongxue.system.domain.Role;
 import com.hetongxue.system.domain.User;
 import com.hetongxue.system.domain.bo.UserBO;
-import com.hetongxue.system.domain.vo.MenuVO;
-import com.hetongxue.system.domain.vo.QueryVO;
-import com.hetongxue.system.domain.vo.RouterVO;
-import com.hetongxue.system.domain.vo.UserVO;
+import com.hetongxue.system.domain.vo.*;
 import com.hetongxue.system.mapper.UserMapper;
 import com.hetongxue.system.service.MenuService;
 import com.hetongxue.system.service.RoleService;
@@ -159,6 +157,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String[] permissions = SecurityUtils.generatePermissionToArray(menuList);
 
         return new UserVO(user.getUsername(), user.getAvatar(), roles, user.getIsAdmin(), permissions, menuList, menus, routers);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateUserPassword(UpdatePasswordVO updatePasswordVO) {
+        User user = SecurityUtils.getUser();
+        if (passwordEncoder.matches(updatePasswordVO.getNewPassword(), user.getPassword())) {
+            throw new DatabaseUpdateException("新密码不能与旧密码一致");
+        }
+
+        if (!passwordEncoder.matches(updatePasswordVO.getOldPassword(), user.getPassword())) {
+            throw new DatabaseUpdateException("旧密码不正确");
+        }
+        return userMapper.updateById(user.setPassword(passwordEncoder.encode(updatePasswordVO.getNewPassword())));
     }
 
 }
