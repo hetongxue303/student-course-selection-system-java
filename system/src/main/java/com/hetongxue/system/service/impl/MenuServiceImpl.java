@@ -96,7 +96,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Transactional(rollbackFor = Exception.class)
     public int delMenu(Long id) {
         return menuMapper.updateById(new Menu().setMenuId(id).setIsDelete(true));
-
     }
 
     @Override
