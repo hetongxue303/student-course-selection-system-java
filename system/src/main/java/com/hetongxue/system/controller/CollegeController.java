@@ -37,7 +37,6 @@ public class CollegeController {
     @PostMapping("/insert")
     @LogAnnotation(operate = "新增学院")
     public Result addCollege(@RequestBody College college) {
-        System.out.println("college = " + college);
         return collegeService.addCollege(college) > 0 ? Result.Success().setMessage("insert success") : Result.Error().setMessage("insert fail");
     }
 

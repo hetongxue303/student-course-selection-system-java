@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 持久对象：专业信息
+ * 班级类
  *
  * @author 何同学
  */
@@ -18,18 +18,19 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("sys_major")
-public class Major implements Serializable {
+@TableName("sys_grade")
+public class Grade implements Serializable {
+
 
     /**
-     * 专业ID
+     * 班级ID
      */
     @TableId(type = IdType.AUTO)
-    private Long majorId;
+    private Long gradeId;
     /**
-     * 专业名称
+     * 班级名称
      */
-    private String majorName;
+    private String gradeName;
     /**
      * 学院ID
      */
@@ -40,9 +41,18 @@ public class Major implements Serializable {
     @TableField(exist = false)
     private College college;
     /**
-     * 专业描述
+     * 专业ID
      */
-    private String remark;
+    private Long majorId;
+    /**
+     * 专业信息
+     */
+    @TableField(exist = false)
+    private Major major;
+    /**
+     * 班级人数
+     */
+    private Integer gradeCount;
     /**
      * 是否删除(1是 0否)
      */
@@ -57,5 +67,4 @@ public class Major implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-
 }

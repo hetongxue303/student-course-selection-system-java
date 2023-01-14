@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hetongxue.system.domain.Major;
 import com.hetongxue.system.domain.vo.QueryVO;
+import com.hetongxue.system.mapper.CollegeMapper;
 import com.hetongxue.system.mapper.MajorMapper;
 import com.hetongxue.system.service.MajorService;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ public class MajorServiceImpl extends ServiceImpl<MajorMapper, Major> implements
 
     @Resource
     private MajorMapper majorMapper;
+    @Resource
+    private CollegeMapper collegeMapper;
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -50,10 +53,10 @@ public class MajorServiceImpl extends ServiceImpl<MajorMapper, Major> implements
         wrapper.orderByAsc(Major::getMajorId);
         Page<Major> list = majorMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
 
-        List<Major> majors = Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>());
+        List<Major> majors = new ArrayList<>();
+        Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>()).forEach(item -> majors.add(item.setCollege(collegeMapper.selectById(item.getCollegeId()))));
 
         return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), majors);
-
     }
 
     @Override
