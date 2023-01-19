@@ -1,11 +1,13 @@
 package com.hetongxue.system.domain.vo;
 
+import com.hetongxue.system.domain.Course;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 首页VO
@@ -34,5 +36,9 @@ public class IndexVo implements Serializable {
      * 课程数目
      */
     private Integer courseCount;
+    /**
+     * 课程表格
+     */
+    private List<Course> courses;
 
 }
