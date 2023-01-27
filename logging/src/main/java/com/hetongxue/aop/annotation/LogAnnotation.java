@@ -7,9 +7,9 @@ import java.lang.annotation.*;
  *
  * @author 何同学
  */
+@Documented
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Documented
 public @interface LogAnnotation {
 
     /**
