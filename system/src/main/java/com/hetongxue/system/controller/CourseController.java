@@ -3,6 +3,7 @@ package com.hetongxue.system.controller;
 import com.hetongxue.aop.annotation.LogAnnotation;
 import com.hetongxue.base.response.Result;
 import com.hetongxue.system.domain.Course;
+import com.hetongxue.system.domain.vo.QueryVO;
 import com.hetongxue.system.service.CourseService;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,8 @@ public class CourseController {
     @GetMapping("/get/page")
     @LogAnnotation(operate = "分页获取课程列表")
     public Result getCoursePage(Integer currentPage, Integer pageSize, Course query) {
-        return Result.Success(courseService.getCoursePage(currentPage, pageSize, query)).setMessage("query pagination list success");
+        QueryVO data = courseService.getCoursePage(currentPage, pageSize, query);
+        return Result.Success(data).setMessage("query pagination list success");
     }
 
     @GetMapping("/get/my/page")
