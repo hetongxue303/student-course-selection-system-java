@@ -26,16 +26,16 @@
         <spring-boot.version>2.7.5</spring-boot.version>
         <druid.version>1.2.14</druid.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
-        <mybatis-plus-generator.version>3.5.3</mybatis-plus-generator.version>
+        <mybatis-plus-generator.version>3.5.2</mybatis-plus-generator.version>
         <user-agent-utils.version>1.21</user-agent-utils.version>
-        <oshi.version>6.3.1</oshi.version>
+        <oshi.version>6.3.0</oshi.version>
         <swagger.version>3.0.0</swagger.version>
         <knife4j.version>3.0.3</knife4j.version>
         <commons-io.version>2.11.0</commons-io.version>
         <commons-fileupload.version>1.4</commons-fileupload.version>
         <poi.version>5.2.3</poi.version>
         <easyexcel.version>3.1.2</easyexcel.version>
-        <velocity.version>1.7</velocity.version>
+        <velocity.version>1.6.2</velocity.version>
         <velocity-engine.version>2.3</velocity-engine.version>
         <commons-collections.version>4.4</commons-collections.version>
         <fastjson.version>2.0.18</fastjson.version>
@@ -141,35 +141,40 @@
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml</artifactId>
-                <version>${poi.version}</version>
+                <!--                <version>${poi.version}</version>-->
+                <version>4.1.2</version>
             </dependency>
 
             <!-- easy-excel -->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>easyexcel</artifactId>
-                <version>${easyexcel.version}</version>
+                <!--                <version>${easyexcel.version}</version>-->
+                <version>3.0.5</version>
             </dependency>
 
             <!-- collections工具类 -->
             <dependency>
                 <groupId>commons-collections</groupId>
                 <artifactId>commons-collections</artifactId>
-                <version>${commons-collections.version}</version>
+                <!--                <version>${commons-collections.version}</version>-->
+                <version>3.2.2</version>
             </dependency>
 
             <!-- 阿里JSON解析器 -->
             <dependency>
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
-                <version>${fastjson.version}</version>
+                <!--                <version>${fastjson.version}</version>-->
+                <version>2.0.16</version>
             </dependency>
 
             <!-- jwt依赖 -->
             <dependency>
                 <groupId>com.auth0</groupId>
                 <artifactId>java-jwt</artifactId>
-                <version>${jwt.version}</version>
+                <!--                <version>${jwt.version}</version>-->
+                <version>3.18.2</version>
             </dependency>
 
             <!--jwt框架依赖 -->
@@ -204,20 +209,23 @@
             <dependency>
                 <groupId>com.alipay.sdk</groupId>
                 <artifactId>alipay-sdk-java</artifactId>
-                <version>${alipay-sdk-java.version}</version>
+                <!--                <version>${alipay-sdk-java.version}</version>-->
+                <version>4.22.32.ALL</version>
             </dependency>
 
             <!-- 七牛相关 -->
             <dependency>
                 <groupId>com.qiniu</groupId>
                 <artifactId>qiniu-java-sdk</artifactId>
-                <version>${qiniu-java-sdk.version}</version>
+                <!--                <version>${qiniu-java-sdk.version}</version>-->
+                <version>7.9.4</version>
             </dependency>
-            <dependency>
-                <groupId>nl.basjes.parse.useragent</groupId>
-                <artifactId>yauaa</artifactId>
-                <version>${yauaa.version}</version>
-            </dependency>
+            <!--            <dependency>-->
+            <!--                <groupId>nl.basjes.parse.useragent</groupId>-->
+            <!--                <artifactId>yauaa</artifactId>-->
+            <!--                &lt;!&ndash;                <version>${yauaa.version}</version>&ndash;&gt;-->
+            <!--                <version>7.10.0</version>-->
+            <!--            </dependency>-->
 
             <!-- gson -->
             <dependency>
