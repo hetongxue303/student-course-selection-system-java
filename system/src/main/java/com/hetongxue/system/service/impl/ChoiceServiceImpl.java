@@ -93,7 +93,6 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
                 wrapper.eq(Choice::getStatus, query.getStatus());
             }
         }
-
         Page<Choice> page = choiceMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
 
         List<Choice> choices = new ArrayList<>();
@@ -104,7 +103,6 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
             String courseName = course.getCourseName();
             choices.add(item.setTeacherName(teacherName).setRealName(studentName).setCourseName(courseName));
         });
-
         return new QueryVO(page.getCurrent(), page.getSize(), page.getTotal(), page.getPages(), choices);
     }
 

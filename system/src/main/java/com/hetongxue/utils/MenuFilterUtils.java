@@ -43,9 +43,7 @@ public class MenuFilterUtils {
      */
     public static List<MenuTreeVO> filterMenuToMenuTree(List<Menu> menus, Long parentId) {
         List<MenuTreeVO> result = new ArrayList<>();
-        Optional.ofNullable(menus).orElse(new ArrayList<>()).stream().filter(item -> Objects.nonNull(item) && Objects.nonNull(item.getMenuTitle()) && Objects.equals(item.getParentId(), parentId)).forEach(item -> {
-            result.add(new MenuTreeVO(item.getMenuId(), item.getMenuTitle(), !(Objects.requireNonNull(filterMenuToMenuTree(menus, item.getMenuId())).size() > 0), false, null));
-        });
+        Optional.ofNullable(menus).orElse(new ArrayList<>()).stream().filter(item -> Objects.nonNull(item) && Objects.nonNull(item.getMenuTitle()) && Objects.equals(item.getParentId(), parentId)).forEach(item -> result.add(new MenuTreeVO(item.getMenuId(), item.getMenuTitle(), !(Objects.requireNonNull(filterMenuToMenuTree(menus, item.getMenuId())).size() > 0), false, null)));
         return result;
     }
 
