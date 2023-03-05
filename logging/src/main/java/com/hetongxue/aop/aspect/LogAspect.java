@@ -60,7 +60,6 @@ public class LogAspect {
      *
      * @param point
      * @param time
-     * @return void
      */
     private void recordLog(ProceedingJoinPoint point, long time) {
         MethodSignature signature = (MethodSignature) point.getSignature();
