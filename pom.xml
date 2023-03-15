@@ -346,6 +346,22 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- swagger3 -->
+        <!-- http://localhost:8080/swagger-ui -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <!-- knife4j -->
+        <!-- http://localhost:8080/doc.html -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+
     </dependencies>
 
     <build>

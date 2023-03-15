@@ -5,6 +5,8 @@ import com.hetongxue.base.constant.Base;
 import com.hetongxue.base.response.Result;
 import com.hetongxue.configuration.redis.RedisUtils;
 import com.wf.captcha.ArithmeticCaptcha;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @RequestMapping("/auth")
+@Api("验证码模块")
 public class CaptchaController {
     /**
      * 存储时间
@@ -46,6 +49,7 @@ public class CaptchaController {
     private RedisUtils redisUtils;
 
     @GetMapping("/captchaImage")
+    @ApiOperation(value = "获取验证码", notes = "获取一个随机验证码", response = Result.class)
     @LogAnnotation(operate = "获取验证码", detail = "获取一个随机验证码")
     public Result getVerify() {
         try {

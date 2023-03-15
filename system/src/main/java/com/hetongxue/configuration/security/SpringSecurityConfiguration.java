@@ -48,7 +48,7 @@ public class SpringSecurityConfiguration {
     /**
      * 请求白名单
      */
-    private static final String[] REQUEST_WHITE_LIST = {LOGIN_PATH, LOGOUT_PATH, NO_PERMISSION, CAPTCHA_IMAGE};
+    private static final String[] REQUEST_WHITE_LIST = {LOGIN_PATH, LOGOUT_PATH, NO_PERMISSION, CAPTCHA_IMAGE, "/swagger-ui", "/doc.html"};
 
     @Resource
     private UserDetailsServiceImpl userService;
