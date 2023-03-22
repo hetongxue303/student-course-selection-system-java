@@ -24,39 +24,48 @@ public class CollegeController {
     @GetMapping("/get/all")
     @LogAnnotation(operate = "获取所有学院列表")
     public Result getCollegeAll() {
-        return Result.Success(collegeService.getCollegeAll()).setMessage("query all of list success");
+        return Result.Success(collegeService.getCollegeAll())
+                .setMessage("query all of list success");
     }
 
     @GetMapping("/get/page")
     @LogAnnotation(operate = "分页获取学院列表")
     public Result getCollegePage(Integer currentPage, Integer pageSize, College query) {
-        return Result.Success(collegeService.getCollegePage(currentPage, pageSize, query)).setMessage("query pagination list success");
+        return Result.Success(collegeService.getCollegePage(currentPage, pageSize, query))
+                .setMessage("query pagination list success");
 
     }
 
     @PostMapping("/insert")
     @LogAnnotation(operate = "新增学院")
     public Result addCollege(@RequestBody College college) {
-        return collegeService.addCollege(college) > 0 ? Result.Success().setMessage("insert success") : Result.Error().setMessage("insert fail");
+        return collegeService.addCollege(college) > 0 ? Result.Success()
+                .setMessage("insert success") : Result.Error()
+                .setMessage("insert fail");
     }
 
     @DeleteMapping("/delete/{id}")
     @LogAnnotation(operate = "删除学院")
     public Result delCollege(@PathVariable("id") Long id) {
-        return collegeService.delCollege(id) > 0 ? Result.Success().setMessage("delete success") : Result.Error().setMessage("delete fail");
+        return collegeService.delCollege(id) > 0 ? Result.Success()
+                .setMessage("delete success") : Result.Error()
+                .setMessage("delete fail");
     }
 
     @DeleteMapping("/delete/batch")
     @LogAnnotation(operate = "批量删除学院")
     public Result delBatchCollege(@RequestBody List<Long> ids) {
-        return collegeService.delBatchCollege(ids) > 0 ? Result.Success().setMessage("batch delete success") : Result.Error().setMessage("batch delete fail");
-
+        return collegeService.delBatchCollege(ids) > 0 ? Result.Success()
+                .setMessage("batch delete success") : Result.Error()
+                .setMessage("batch delete fail");
     }
 
     @PutMapping("/update")
     @LogAnnotation(operate = "更新学院")
     public Result updateCollege(@RequestBody College college) {
-        return collegeService.updateCollege(college) > 0 ? Result.Success().setMessage("update success") : Result.Error().setMessage("update fail");
+        return collegeService.updateCollege(college) > 0 ? Result.Success()
+                .setMessage("update success") : Result.Error()
+                .setMessage("update fail");
     }
 
 }

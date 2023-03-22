@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hetongxue.system.domain.Grade;
 import com.hetongxue.system.domain.vo.QueryVO;
-import com.hetongxue.system.mapper.CollegeMapper;
-import com.hetongxue.system.mapper.GradeMapper;
-import com.hetongxue.system.mapper.MajorMapper;
+import com.hetongxue.system.repository.CollegeMapper;
+import com.hetongxue.system.repository.GradeMapper;
+import com.hetongxue.system.repository.MajorMapper;
 import com.hetongxue.system.service.GradeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -87,5 +87,5 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
     public int updateGrade(Grade grade) {
         return gradeMapper.updateById(grade);
     }
-    
+
 }

@@ -11,7 +11,7 @@ import com.hetongxue.system.domain.Role;
 import com.hetongxue.system.domain.User;
 import com.hetongxue.system.domain.bo.UserBO;
 import com.hetongxue.system.domain.vo.*;
-import com.hetongxue.system.mapper.UserMapper;
+import com.hetongxue.system.repository.UserMapper;
 import com.hetongxue.system.service.MenuService;
 import com.hetongxue.system.service.RoleService;
 import com.hetongxue.system.service.UserService;

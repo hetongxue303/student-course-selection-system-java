@@ -9,9 +9,9 @@ import com.hetongxue.system.domain.Choice;
 import com.hetongxue.system.domain.Course;
 import com.hetongxue.system.domain.User;
 import com.hetongxue.system.domain.vo.QueryVO;
-import com.hetongxue.system.mapper.ChoiceMapper;
-import com.hetongxue.system.mapper.CourseMapper;
-import com.hetongxue.system.mapper.UserMapper;
+import com.hetongxue.system.repository.ChoiceMapper;
+import com.hetongxue.system.repository.CourseMapper;
+import com.hetongxue.system.repository.UserMapper;
 import com.hetongxue.system.service.ChoiceService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -48,11 +48,14 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
         wrapper.eq(Choice::getIsDelete, false);
         wrapper.orderByAsc(Choice::getChoiceId);
         List<Choice> choices = new ArrayList<>();
-        Optional.ofNullable(choiceMapper.selectList(wrapper)).orElse(new ArrayList<>()).forEach(item -> {
-            User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId()));
-            Course course = courseMapper.selectOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseId, item.getCourseId()));
-            choices.add(item.setRealName(user.getRealName()).setCourseName(course.getCourseName()));
-        });
+        Optional.ofNullable(choiceMapper.selectList(wrapper))
+                .orElse(new ArrayList<>())
+                .forEach(item -> {
+                    User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId()));
+                    Course course = courseMapper.selectOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseId, item.getCourseId()));
+                    choices.add(item.setRealName(user.getRealName())
+                            .setCourseName(course.getCourseName()));
+                });
         return choices;
     }
 
@@ -67,7 +70,10 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
         // 不是管理员
         if (!user.getIsAdmin()) {
             if (user.getType() == 2) {
-                List<Long> courseIds = courseMapper.selectList(new LambdaQueryWrapper<Course>().eq(Course::getUserId, user.getUserId())).stream().map(Course::getCourseId).collect(Collectors.toList());
+                List<Long> courseIds = courseMapper.selectList(new LambdaQueryWrapper<Course>().eq(Course::getUserId, user.getUserId()))
+                        .stream()
+                        .map(Course::getCourseId)
+                        .collect(Collectors.toList());
                 if (courseIds.size() > 0) {
                     wrapper.in(Choice::getCourseId, courseIds);
                 }
@@ -79,12 +85,18 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
 
         // 查询相关
         if (Objects.nonNull(query.getRealName())) {
-            List<Long> userIds = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getRealName, query.getRealName())).stream().map(User::getUserId).collect(Collectors.toList());
+            List<Long> userIds = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getRealName, query.getRealName()))
+                    .stream()
+                    .map(User::getUserId)
+                    .collect(Collectors.toList());
             wrapper.in(userIds.size() > 0, Choice::getUserId, userIds);
         }
 
         if (Objects.nonNull(query.getCourseName())) {
-            List<Long> courseIds = courseMapper.selectList(new LambdaQueryWrapper<Course>().like(Course::getCourseName, query.getCourseName())).stream().map(Course::getCourseId).collect(Collectors.toList());
+            List<Long> courseIds = courseMapper.selectList(new LambdaQueryWrapper<Course>().like(Course::getCourseName, query.getCourseName()))
+                    .stream()
+                    .map(Course::getCourseId)
+                    .collect(Collectors.toList());
             wrapper.in(courseIds.size() > 0, Choice::getCourseId, courseIds);
         }
 
@@ -96,13 +108,19 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
         Page<Choice> page = choiceMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
 
         List<Choice> choices = new ArrayList<>();
-        Optional.ofNullable(page.getRecords()).orElse(new ArrayList<>()).forEach(item -> {
-            Course course = courseMapper.selectOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseId, item.getCourseId()));
-            String teacherName = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, course.getUserId())).getRealName();
-            String studentName = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId())).getRealName();
-            String courseName = course.getCourseName();
-            choices.add(item.setTeacherName(teacherName).setRealName(studentName).setCourseName(courseName));
-        });
+        Optional.ofNullable(page.getRecords())
+                .orElse(new ArrayList<>())
+                .forEach(item -> {
+                    Course course = courseMapper.selectOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseId, item.getCourseId()));
+                    String teacherName = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, course.getUserId()))
+                            .getRealName();
+                    String studentName = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId()))
+                            .getRealName();
+                    String courseName = course.getCourseName();
+                    choices.add(item.setTeacherName(teacherName)
+                            .setRealName(studentName)
+                            .setCourseName(courseName));
+                });
         return new QueryVO(page.getCurrent(), page.getSize(), page.getTotal(), page.getPages(), choices);
     }
 
@@ -115,7 +133,8 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int delChoice(Long id) {
-        return choiceMapper.updateById(new Choice().setChoiceId(id).setIsDelete(true));
+        return choiceMapper.updateById(new Choice().setChoiceId(id)
+                .setIsDelete(true));
     }
 
     @Override
@@ -123,7 +142,8 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
     public int delBatchChoice(List<Long> ids) {
         AtomicInteger result = new AtomicInteger(1);
         ids.forEach(choiceId -> {
-            if (choiceMapper.updateById(new Choice().setChoiceId(choiceId).setIsDelete(true)) == 0) result.set(0);
+            if (choiceMapper.updateById(new Choice().setChoiceId(choiceId)
+                    .setIsDelete(true)) == 0) result.set(0);
         });
         return result.get();
     }
@@ -138,10 +158,13 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
     @Transactional(rollbackFor = Exception.class)
     public int studentChoiceCourse(Integer type, Long courseId) {
         Course course = courseMapper.selectOne(new LambdaQueryWrapper<Course>().eq(Course::getCourseId, courseId));
-        Long userId = SecurityUtils.getUser().getUserId();
+        Long userId = SecurityUtils.getUser()
+                .getUserId();
         switch (type) {
             case 1:
-                Choice myChoice = choiceMapper.selectOne(new LambdaQueryWrapper<Choice>().eq(Choice::getCourseId, courseId).eq(Choice::getUserId, userId).eq(Choice::getIsQuit, false));
+                Choice myChoice = choiceMapper.selectOne(new LambdaQueryWrapper<Choice>().eq(Choice::getCourseId, courseId)
+                        .eq(Choice::getUserId, userId)
+                        .eq(Choice::getIsQuit, false));
                 if (Objects.nonNull(myChoice)) {
                     throw new DatabaseInsertException("你已选择该课程，不可重复选择！");
                 }
@@ -149,11 +172,14 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, Choice> impleme
                     throw new DatabaseInsertException("课程已满");
                 }
 
-                courseMapper.updateById(new Course().setCourseId(courseId).setChoice(course.getChoice() + 1));
-                choiceMapper.insert(new Choice().setUserId(userId).setCourseId(courseId));
+                courseMapper.updateById(new Course().setCourseId(courseId)
+                        .setChoice(course.getChoice() + 1));
+                choiceMapper.insert(new Choice().setUserId(userId)
+                        .setCourseId(courseId));
                 break;
             case 2:
-                courseMapper.updateById(new Course().setCourseId(courseId).setChoice(course.getChoice() - 1));
+                courseMapper.updateById(new Course().setCourseId(courseId)
+                        .setChoice(course.getChoice() - 1));
                 LambdaQueryWrapper<Choice> wrapper = new LambdaQueryWrapper<>();
                 wrapper.eq(Choice::getCourseId, courseId);
                 wrapper.eq(Choice::getUserId, userId);

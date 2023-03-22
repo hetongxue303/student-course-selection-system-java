@@ -1,4 +1,4 @@
-package com.hetongxue.system.mapper;
+package com.hetongxue.system.repository;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hetongxue.system.domain.RoleMenu;

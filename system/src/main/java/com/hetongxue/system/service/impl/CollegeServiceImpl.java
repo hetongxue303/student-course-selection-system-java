@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hetongxue.system.domain.College;
 import com.hetongxue.system.domain.vo.QueryVO;
-import com.hetongxue.system.mapper.CollegeMapper;
+import com.hetongxue.system.repository.CollegeMapper;
 import com.hetongxue.system.service.CollegeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;

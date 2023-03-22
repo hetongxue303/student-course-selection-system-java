@@ -8,9 +8,9 @@ import com.hetongxue.system.domain.Choice;
 import com.hetongxue.system.domain.Course;
 import com.hetongxue.system.domain.User;
 import com.hetongxue.system.domain.vo.QueryVO;
-import com.hetongxue.system.mapper.ChoiceMapper;
-import com.hetongxue.system.mapper.CourseMapper;
-import com.hetongxue.system.mapper.UserMapper;
+import com.hetongxue.system.repository.ChoiceMapper;
+import com.hetongxue.system.repository.CourseMapper;
+import com.hetongxue.system.repository.UserMapper;
 import com.hetongxue.system.service.CourseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -58,19 +58,32 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         wrapper.like(Objects.nonNull(query.getCourseName()), Course::getCourseName, query.getCourseName());
         Page<Course> list = courseMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
         ArrayList<Course> courses = new ArrayList<>();
-        Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>()).forEach(item -> {
-            item.setUser(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId())));
-            item.setIsChoice(Objects.nonNull(choiceMapper.selectOne(new LambdaQueryWrapper<Choice>().eq(Choice::getUserId, user.getUserId()).eq(Choice::getCourseId, item.getCourseId()).ne(Choice::getIsQuit, true))));
-            courses.add(item);
-        });
+        Optional
+                .ofNullable(list.getRecords())
+                .orElse(new ArrayList<>())
+                .forEach(item -> {
+                    item.setUser(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId())));
+                    item.setIsChoice(Objects.nonNull(choiceMapper.selectOne(new LambdaQueryWrapper<Choice>()
+                            .eq(Choice::getUserId, user.getUserId())
+                            .eq(Choice::getCourseId, item.getCourseId())
+                            .ne(Choice::getIsQuit, true))));
+                    courses.add(item);
+                });
         return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), courses);
     }
 
     @Override
     public QueryVO getMyCoursePage(Integer currentPage, Integer pageSize, Course query) {
         User user = SecurityUtils.getUser();
-        List<Choice> choices = choiceMapper.selectList(new LambdaQueryWrapper<Choice>().eq(Choice::getUserId, user.getUserId()).eq(Choice::getStatus, 1));
-        List<Long> courseIds = Optional.ofNullable(choices).orElse(new ArrayList<>()).stream().map(Choice::getCourseId).collect(Collectors.toList());
+        List<Choice> choices = choiceMapper.selectList(new LambdaQueryWrapper<Choice>()
+                .eq(Choice::getUserId, user.getUserId())
+                .eq(Choice::getStatus, 1));
+        List<Long> courseIds = Optional
+                .ofNullable(choices)
+                .orElse(new ArrayList<>())
+                .stream()
+                .map(Choice::getCourseId)
+                .collect(Collectors.toList());
         LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
         if (courseIds.size() > 0) {
             wrapper.eq(Course::getIsDelete, false);
@@ -82,7 +95,10 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         }
         Page<Course> list = courseMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
         ArrayList<Course> courses = new ArrayList<>();
-        Optional.ofNullable(list.getRecords()).orElse(new ArrayList<>()).forEach(item -> courses.add(item.setUser(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId())))));
+        Optional
+                .ofNullable(list.getRecords())
+                .orElse(new ArrayList<>())
+                .forEach(item -> courses.add(item.setUser(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUserId, item.getUserId())))));
         return new QueryVO(list.getCurrent(), list.getSize(), list.getTotal(), list.getPages(), courses);
     }
 
@@ -99,7 +115,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int delCourse(Long id) {
-        return courseMapper.updateById(new Course().setCourseId(id).setIsDelete(true));
+        return courseMapper.updateById(new Course()
+                .setCourseId(id)
+                .setIsDelete(true));
     }
 
     @Override
@@ -107,7 +125,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public int delBatchCourse(List<Long> ids) {
         try {
             ids.forEach(id -> {
-                courseMapper.updateById(new Course().setCourseId(id).setIsDelete(true));
+                courseMapper.updateById(new Course()
+                        .setCourseId(id)
+                        .setIsDelete(true));
             });
             return 1;
         } catch (Exception e) {

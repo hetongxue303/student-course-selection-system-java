@@ -1,4 +1,4 @@
 logging:
   level:
     root: info
-    com.hetongxue.system.mapper: debug
+    com.hetongxue.system.repository: debug
