@@ -5,15 +5,12 @@ import com.hetongxue.system.domain.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.springframework.stereotype.Repository;
 
 /**
  * 用户Mapper
  *
  * @author 何同学
  */
-@Repository
-//@Mapper
 public interface UserMapper extends BaseMapper<User> {
 
     /**

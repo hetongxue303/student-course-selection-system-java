@@ -18,11 +18,9 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @EnableCaching
 @EnableOpenApi
 @EnableKnife4j
-@MapperScan("com.hetongxue.system.mapper")
+@MapperScan("com.hetongxue.system.repository")
 public class Application {
-
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-
 }

@@ -20,7 +20,7 @@ public interface ChoiceMapper extends BaseMapper<Choice> {
      * @param userId 用户ID
      * @return List
      */
-    @Select("select course_id from sys_selection where user_id = #{userId}")
+    @Select("select course_id from sys_choice where user_id = #{userId}")
     List<Long> selectCourseIdList(@Param("userId") Long userId);
 
 }
