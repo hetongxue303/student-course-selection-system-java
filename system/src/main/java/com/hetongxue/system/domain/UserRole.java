@@ -19,7 +19,6 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @TableName("sys_user_role")
 public class UserRole implements Serializable {
-
     /**
      * 用户ID
      */
@@ -28,5 +27,4 @@ public class UserRole implements Serializable {
      * 角色ID
      */
     private Long roleId;
-
 }

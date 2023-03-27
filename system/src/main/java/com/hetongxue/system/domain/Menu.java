@@ -20,7 +20,6 @@ import java.util.Date;
 @Accessors(chain = true)
 @TableName("sys_menu")
 public class Menu implements Serializable {
-
     /**
      * 菜单ID
      */
@@ -96,5 +95,4 @@ public class Menu implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-
 }

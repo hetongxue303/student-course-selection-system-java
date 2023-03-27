@@ -20,7 +20,6 @@ import java.util.Date;
 @Accessors(chain = true)
 @TableName("sys_course")
 public class Course implements Serializable {
-
     /**
      * 课程ID
      */
@@ -65,7 +64,6 @@ public class Course implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-
     /**
      * 是否已选
      */
@@ -81,5 +79,4 @@ public class Course implements Serializable {
      */
     @TableField(exist = false)
     private String teacherName;
-
 }

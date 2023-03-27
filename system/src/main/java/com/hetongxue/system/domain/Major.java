@@ -20,7 +20,6 @@ import java.util.Date;
 @Accessors(chain = true)
 @TableName("sys_major")
 public class Major implements Serializable {
-
     /**
      * 专业ID
      */
@@ -57,5 +56,4 @@ public class Major implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-
 }

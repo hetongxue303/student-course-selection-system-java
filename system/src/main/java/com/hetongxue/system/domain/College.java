@@ -20,7 +20,6 @@ import java.util.Date;
 @Accessors(chain = true)
 @TableName("sys_college")
 public class College implements Serializable {
-
     /**
      * 学院ID
      */
@@ -48,5 +47,4 @@ public class College implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-
 }

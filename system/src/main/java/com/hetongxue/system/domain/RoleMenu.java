@@ -19,7 +19,6 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @TableName("sys_role_menu")
 public class RoleMenu implements Serializable {
-
     /**
      * 角色ID
      */
@@ -28,5 +27,4 @@ public class RoleMenu implements Serializable {
      * 菜单ID
      */
     private Long menuId;
-
 }

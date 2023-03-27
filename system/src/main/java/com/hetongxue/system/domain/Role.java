@@ -21,7 +21,6 @@ import java.util.List;
 @Accessors(chain = true)
 @TableName("sys_role")
 public class Role implements Serializable {
-
     /**
      * 角色ID
      */
@@ -65,12 +64,9 @@ public class Role implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-
-    
     /**
      * 菜单列表
      */
     @TableField(exist = false)
     private List<Menu> menus;
-
 }

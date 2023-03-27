@@ -20,8 +20,6 @@ import java.util.Date;
 @Accessors(chain = true)
 @TableName("sys_grade")
 public class Grade implements Serializable {
-
-
     /**
      * 班级ID
      */

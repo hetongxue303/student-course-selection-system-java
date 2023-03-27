@@ -20,7 +20,6 @@ import java.util.Date;
 @Accessors(chain = true)
 @TableName("sys_user")
 public class User implements Serializable {
-
     /**
      * 用户ID
      */
@@ -96,5 +95,4 @@ public class User implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-
 }
